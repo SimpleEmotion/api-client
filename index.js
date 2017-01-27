@@ -103,6 +103,74 @@ function APIClient( client_id, client_secret, opts ) {
     tokens = auth_tokens || {};
   };
 
+  api.directory = {};
+
+  api.directory.endpoint = api.endpoint + '/directory';
+
+  api.directory.organization = function ( _id ) {
+
+    if ( !this || this.constructor !== api.directory.organization ) {
+      return new api.directory.organization( _id );
+    }
+
+    var resource = api.directory.organization.endpoint + '/' + _id;
+
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, null, data, done );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, data, done );
+    };
+
+    this.service = {
+
+      endpoint: resource + '/service',
+
+      add: function ( service_id, done ) {
+        api.request.authorized( 'POST', this.service.endpoint + '/' + service_id, null, done );
+      }.bind( this ),
+
+      remove: function ( service_id, done ) {
+        api.request.authorized( 'DELETE', this.service.endpoint + '/' + service_id, null, done );
+      }.bind( this )
+
+    };
+
+    this.user = {
+
+      endpoint: resource + '/user',
+
+      add: function ( user_id, done ) {
+        api.request.authorized( 'POST', this.service.endpoint + '/' + user_id, null, done );
+      }.bind( this ),
+
+      invite: function ( email, done ) {
+        api.request.authorized( 'POST', this.service.endpoint + '/invite/' + email, null, done );
+      }.bind( this ),
+
+      list: function ( data, done ) {
+        api.request.authorized( 'GET', this.service.endpoint, data, done );
+      }.bind( this ),
+
+      remove: function ( user_id, done ) {
+        api.request.authorized( 'DELETE', this.service.endpoint + '/' + user_id, null, done );
+      }.bind( this )
+
+    };
+
+  };
+
+  api.directory.organization.endpoint = api.directory.endpoint + '/organization';
+
+  api.directory.organization.add = function ( data, done ) {
+    api.request.authorized( 'POST', api.directory.organization.endpoint, data, done );
+  };
+
+  api.directory.organization.list = function ( data, done ) {
+    api.request.authorized( 'GET', api.directory.organization.endpoint, data, done );
+  };
+
   api.oauth2 = {};
 
   api.oauth2.endpoint = api.endpoint + '/oauth2';
