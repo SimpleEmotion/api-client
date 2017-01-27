@@ -1,0 +1,31 @@
+{
+  "name": "simple-emotion-client-apis",
+  "description": "Simple Emotion Client APIs",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimpleEmotion/simple-emotion-client-apis.git"
+  },
+  "author": "Akash Krishnan <ak@aakay.net>",
+  "bugs": {
+    "url": "https://github.com/SimpleEmotion/simple-emotion-client-apis/issues"
+  },
+  "homepage": "https://github.com/SimpleEmotion/simple-emotion-client-apis",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "eslint": "eslint",
+    "lint": "eslint . --quiet",
+    "lint-fix": "eslint . --quiet --fix"
+  },
+  "engines": {
+    "node": "^6.9.4"
+  },
+  "dependencies": {
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.13.1",
+    "eslint-config-simpleemotion": "git+ssh://git@github.com/SimpleEmotion/eslint-config-simpleemotion.git#v0.2.1"
+  }
+}
