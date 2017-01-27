@@ -164,7 +164,7 @@ function APIClient( client_id, client_secret, opts ) {
   api.directory.organization.endpoint = api.directory.endpoint + '/organization';
 
   api.directory.organization.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.directory.organization.endpoint, data, done );
+    api.request.authorized( 'POST', api.directory.organization.endpoint + '/' + data._id, data, done );
   };
 
   api.directory.organization.list = function ( data, done ) {
