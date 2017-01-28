@@ -123,6 +123,10 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'DELETE', resource, data, done );
     };
 
+    this.rename = function ( data, done ) {
+      api.request.authorized( 'POST', resource + '/rename', data, done );
+    };
+
     this.service = {
 
       endpoint: resource + '/service',
