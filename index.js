@@ -51,12 +51,9 @@ function APIClient( client_id, client_secret, opts ) {
       uri: api.host + path,
       headers: {
         Authorization: 'Bearer ' + tokens.access_token
-      }
+      },
+      json: body || {}
     };
-
-    if ( body ) {
-      opts.json = body;
-    }
 
     if ( !tokens.access_token ) {
       return reauthorize();
@@ -116,15 +113,11 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.directory.organization.endpoint + '/' + _id;
 
     this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, null, data, done );
+      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
     };
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, data, done );
-    };
-
-    this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', data, done );
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
     };
 
     this.service = {
