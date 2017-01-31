@@ -143,15 +143,15 @@ function APIClient( client_id, client_secret, opts ) {
       }.bind( this ),
 
       invitation: {
-        
+
         add: function ( email, done ) {
           api.request.authorized( 'POST', this.user.endpoint + '/invitation/' + email, null, done );
         }.bind( this ),
-        
+
         remove: function ( email, done ) {
           api.request.authorized( 'DELETE', this.user.endpoint + '/invitation/' + email, null, done );
         }.bind( this )
-        
+
       },
 
       list: function ( data, done ) {
@@ -453,6 +453,159 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.oauth2.user.removeAll = function ( done ) {
     api.request.authorized( 'DELETE', api.oauth2.user.endpoint, null, done );
+  };
+
+  api.storage = {};
+
+  api.storage.endpoint = api.endpoint + '/storage';
+
+  api.storage.analysis = function ( _id ) {
+
+    if ( !this || this.constructor !== api.storage.analysis ) {
+      return new api.storage.analysis( _id );
+    }
+
+    var resource = api.storage.analysis.endpoint + '/' + _id;
+
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+    this.rename = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
+
+    }
+
+  };
+
+  api.storage.analysis.endpoint = api.storage.endpoint + '/analysis';
+
+  api.storage.analysis.add = function ( data, done ) {
+    api.request.authorized( 'POST', api.storage.analysis.endpoint, data, done );
+  };
+
+  api.storage.analysis.list = function ( query, done ) {
+    api.request.authorized( 'GET', api.storage.analysis.endpoint, query, done );
+  };
+
+  api.storage.audio = function ( _id ) {
+
+    if ( !this || this.constructor !== api.storage.audio ) {
+      return new api.storage.audio( _id );
+    }
+
+    var resource = api.storage.audio.endpoint + '/' + _id;
+
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+    this.rename = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
+    };
+
+    this.getSignedUrl = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/url', done ? data : {}, done || data );
+    };
+
+    this.move = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/move', done ? data : {}, done || data );
+    };
+
+  };
+
+  api.storage.audio.endpoint = api.storage.endpoint + '/audio';
+
+  api.storage.audio.add = function ( data, done ) {
+    api.request.authorized( 'POST', api.storage.audio.endpoint, data, done );
+  };
+
+  api.storage.audio.list = function ( query, done ) {
+    api.request.authorized( 'GET', api.storage.audio.endpoint, query, done );
+  };
+
+  api.storage.features = function ( _id ) {
+
+    if ( !this || this.constructor !== api.storage.features ) {
+      return new api.storage.features( _id );
+    }
+
+    var resource = api.storage.features.endpoint + '/' + _id;
+
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+    this.rename = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
+    };
+
+    this.getSignedUrl = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/url', done ? data : {}, done || data );
+    };
+
+  };
+
+  api.storage.features.endpoint = api.storage.endpoint + '/features';
+
+  api.storage.features.add = function ( data, done ) {
+    api.request.authorized( 'POST', api.storage.features.endpoint, data, done );
+  };
+
+  api.storage.features.list = function ( query, done ) {
+    api.request.authorized( 'GET', api.storage.features.endpoint, query, done );
+  };
+
+  api.storage.folder = function ( _id ) {
+
+    if ( !this || this.constructor !== api.storage.folder ) {
+      return new api.storage.folder( _id );
+    }
+
+    var resource = api.storage.folder.endpoint + '/' + _id;
+
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+    this.audio = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/audio', done ? data : {}, done || data );
+    };
+
+    this.rename = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
+    };
+
+    this.move = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/move', done ? data : {}, done || data );
+    };
+
+  };
+
+  api.storage.folder.endpoint = api.storage.endpoint + '/folder';
+
+  api.storage.folder.add = function ( data, done ) {
+    api.request.authorized( 'POST', api.storage.folder.endpoint, data, done );
+  };
+
+  api.storage.folder.list = function ( query, done ) {
+    api.request.authorized( 'GET', api.storage.folder.endpoint, query, done );
   };
 
   Object.freeze( this.oauth2.credentials );
