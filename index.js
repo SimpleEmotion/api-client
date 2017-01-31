@@ -139,7 +139,7 @@ function APIClient( client_id, client_secret, opts ) {
       endpoint: resource + '/user',
 
       add: function ( user_id, done ) {
-        api.request.authorized( 'POST', this.user.endpoint + '/' + user_id, null, done );
+        api.request.authorized( 'POST', this.user.endpoint + '/' + user_id, { user: { _id: user_id } }, done );
       }.bind( this ),
 
       invite: function ( email, done ) {
