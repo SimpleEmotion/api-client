@@ -139,19 +139,19 @@ function APIClient( client_id, client_secret, opts ) {
       endpoint: resource + '/user',
 
       add: function ( user_id, done ) {
-        api.request.authorized( 'POST', this.service.endpoint + '/' + user_id, null, done );
+        api.request.authorized( 'POST', this.user.endpoint + '/' + user_id, null, done );
       }.bind( this ),
 
       invite: function ( email, done ) {
-        api.request.authorized( 'POST', this.service.endpoint + '/invite/' + email, null, done );
+        api.request.authorized( 'POST', this.user.endpoint + '/invite/' + email, null, done );
       }.bind( this ),
 
       list: function ( data, done ) {
-        api.request.authorized( 'GET', this.service.endpoint, data, done );
+        api.request.authorized( 'GET', this.user.endpoint, data, done );
       }.bind( this ),
 
       remove: function ( user_id, done ) {
-        api.request.authorized( 'DELETE', this.service.endpoint + '/' + user_id, null, done );
+        api.request.authorized( 'DELETE', this.user.endpoint + '/' + user_id, null, done );
       }.bind( this )
 
     };
