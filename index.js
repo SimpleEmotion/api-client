@@ -7,7 +7,7 @@ module.exports = APIClient;
 function APIClient( client_id, client_secret, opts ) {
 
   if ( !this || this.constructor !== APIClient ) {
-    return new APIClient( client_id, client_secret );
+    return new APIClient( client_id, client_secret, opts );
   }
 
   var api = this;
