@@ -457,8 +457,6 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.operations = {};
 
-  api.operations.endpoint = api.endpoint + '/operations';
-
   api.operations = function ( _id ) {
 
     if ( !this || this.constructor !== api.operations ) {
@@ -480,6 +478,8 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
   };
+
+  api.operations.endpoint = api.endpoint + '/operations';
 
   api.operations.add = function ( data, done ) {
     api.request.authorized( 'POST', api.operations.endpoint, data, done );
