@@ -608,11 +608,19 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'GET', api.storage.folder.endpoint, query, done );
   };
 
+  Object.freeze( this.directory.organization.service );
+  Object.freeze( this.directory.organization.user );
+  Object.freeze( this.directory.organization );
+  Object.freeze( this.directory );
   Object.freeze( this.oauth2.credentials );
   Object.freeze( this.oauth2.token );
   Object.freeze( this.oauth2.twoFactor );
   Object.freeze( this.oauth2.user );
-  Object.freeze( this.oauth2 );
+  Object.freeze( this.storage.analysis );
+  Object.freeze( this.storage.audio );
+  Object.freeze( this.storage.features );
+  Object.freeze( this.storage.folder );
+  Object.freeze( this.storage );
   Object.freeze( this );
 
 }
