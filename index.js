@@ -455,6 +455,40 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'DELETE', api.oauth2.user.endpoint, null, done );
   };
 
+  api.operations = {};
+
+  api.operations = function ( _id ) {
+
+    if ( !this || this.constructor !== api.operations ) {
+      return new api.operations( _id );
+    }
+
+    var resource = api.operations.endpoint + '/' + _id;
+
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, done ? data : null, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
+    };
+
+    this.update = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource, done ? data : null, done || data );
+    };
+
+  };
+
+  api.operations.endpoint = api.endpoint + '/operations';
+
+  api.operations.add = function ( data, done ) {
+    api.request.authorized( 'POST', api.operations.endpoint, data, done );
+  };
+
+  api.operations.list = function ( data, done ) {
+    api.request.authorized( 'GET', api.operations.endpoint, done ? data : null, done || data );
+  };
+
   api.storage = {};
 
   api.storage.endpoint = api.endpoint + '/storage';
@@ -616,6 +650,7 @@ function APIClient( client_id, client_secret, opts ) {
   Object.freeze( this.oauth2.token );
   Object.freeze( this.oauth2.twoFactor );
   Object.freeze( this.oauth2.user );
+  Object.freeze( this.operations );
   Object.freeze( this.storage.analysis );
   Object.freeze( this.storage.audio );
   Object.freeze( this.storage.features );
