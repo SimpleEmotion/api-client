@@ -109,31 +109,26 @@ function APIClient( client_id, client_secret, opts ) {
       tokens = result;
       opts.headers.Authorization = 'Bearer ' + tokens.access_token;
 
-      // stream data attempt
-      var finished = false;
+      opts.formData={
+        file:fd
+      };
 
-      var write = request( opts )
-        .on( 'response', function ( response ) {
-          if ( !finished ) {
-            finished = true;
+      request.post(opts, function(err, res, body){
+        if ( err ) {
+          return done( err, null );
+        }
 
-            console.log( "RESPONSE", response );
-            console.log( "RESPONSE", response.body );
+        if ( !res || !body ) {
+          return done( new Error( 'No response.' ), null );
+        }
 
-            if ( response.err ) {
-              done( response, err, null );
-            }
-            done( null, response.body );
-          }
-        } )
-        .on( 'error', function ( err ) {
-          if ( !finished ) {
-            finished = true;
-            done( err );
-          }
-        } );
+        if ( body.err ) {
+          return done( body.err, null );
+        }
 
-      fd.pipe( write );
+        done( null, body );
+
+      });
 
     } );
 
