@@ -92,6 +92,53 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
+  api.request.stream = function ( method, path, fd, done ) {
+
+    var opts = {
+      method: method,
+      uri: api.host + path,
+      headers: {}
+    };
+
+    api.oauth2.token.grant( scope, function ( err, result ) {
+
+      if ( err ) {
+        return done( err, null );
+      }
+
+      tokens = result;
+      opts.headers.Authorization = 'Bearer ' + tokens.access_token;
+
+      // stream data attempt
+      var finished = false;
+
+      var write = request( opts )
+        .on( 'response', function ( response ) {
+          if ( !finished ) {
+            finished = true;
+
+            console.log( "RESPONSE", response );
+            console.log( "RESPONSE", response.body );
+
+            if ( response.err ) {
+              done( response, err, null );
+            }
+            done( null, response.body );
+          }
+        } )
+        .on( 'error', function ( err ) {
+          if ( !finished ) {
+            finished = true;
+            done( err );
+          }
+        } );
+
+      fd.pipe( write );
+
+    } );
+
+  };
+
   api.getAuthTokens = function () {
     return tokens;
   };
@@ -552,6 +599,10 @@ function APIClient( client_id, client_secret, opts ) {
 
     this.move = function ( data, done ) {
       api.request.authorized( 'PATCH', resource + '/move', done ? data : {}, done || data );
+    };
+
+    this.upload = function ( fd, done ) {
+      api.request.stream( 'POST', resource, done ? fd : {}, done || fd );
     };
 
   };
