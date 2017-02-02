@@ -536,6 +536,10 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'GET', api.operations.endpoint, done ? data : null, done || data );
   };
 
+  api.operations.next = function ( data, done ) {
+    api.request.authorized( 'GET', api.operations.endpoint + '/next', data, done );
+  };
+
   api.storage = {};
 
   api.storage.endpoint = api.endpoint + '/storage';
