@@ -109,11 +109,11 @@ function APIClient( client_id, client_secret, opts ) {
       tokens = result;
       opts.headers.Authorization = 'Bearer ' + tokens.access_token;
 
-      opts.formData={
-        file:fd
+      opts.formData = {
+        file: fd
       };
 
-      request.post(opts, function(err, res, body){
+      request.post( opts, function ( err, res, body ) {
         if ( err ) {
           return done( err, null );
         }
@@ -122,14 +122,14 @@ function APIClient( client_id, client_secret, opts ) {
           return done( new Error( 'No response.' ), null );
         }
 
-        var body =  JSON.parse(body);
-        if ( body.err) {
+        var body = JSON.parse( body );
+        if ( body.err ) {
           return done( body.err, null );
         }
 
         done( null, body );
 
-      });
+      } );
 
     } );
 
@@ -518,6 +518,31 @@ function APIClient( client_id, client_secret, opts ) {
 
     this.update = function ( data, done ) {
       api.request.authorized( 'PATCH', resource, done ? data : null, done || data );
+    };
+
+    this.onComplete = function ( poll_rate, done ) {
+
+      if ( !done ) {
+        done = poll_rate;
+        poll_rate = 1000;
+      }
+
+      this.get( function ( err, result ) {
+
+        if ( err ) {
+          return done( err, null );
+        }
+
+        // Check if operation has completed
+        if ( result.operation.states.completed ) {
+          return done( null, result );
+        }
+
+        // Poll
+        setTimeout( this.onComplete.bind( this, poll_rate, done ), poll_rate );
+
+      } );
+
     };
 
   };
