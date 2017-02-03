@@ -122,7 +122,8 @@ function APIClient( client_id, client_secret, opts ) {
           return done( new Error( 'No response.' ), null );
         }
 
-        if ( body.err ) {
+        var body =  JSON.parse(body);
+        if ( body.err) {
           return done( body.err, null );
         }
 
