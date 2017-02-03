@@ -618,8 +618,12 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
     };
 
-    this.getSignedUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/url', done ? data : {}, done || data );
+    this.getDownloadUrl = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/url/download', done ? data : {}, done || data );
+    };
+
+    this.getUploadUrl = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/url/upload', done ? data : { action: 'read' }, done || data );
     };
 
     this.move = function ( data, done ) {
