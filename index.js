@@ -541,7 +541,7 @@ function APIClient( client_id, client_secret, opts ) {
         // Poll
         setTimeout( this.onComplete.bind( this, poll_rate, done ), poll_rate );
 
-      } );
+      }.bind( this ) );
 
     };
 
@@ -583,8 +583,7 @@ function APIClient( client_id, client_secret, opts ) {
 
     this.rename = function ( data, done ) {
       api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
-
-    }
+    };
 
   };
 
@@ -619,11 +618,11 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
     this.getDownloadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/url/download', done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource + '/download.url', done ? data : {}, done || data );
     };
 
     this.getUploadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/url/upload', done ? data : { action: 'read' }, done || data );
+      api.request.authorized( 'GET', resource + '/upload.url', done ? data : {}, done || data );
     };
 
     this.move = function ( data, done ) {
@@ -666,8 +665,12 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
     };
 
-    this.getSignedUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/url', done ? data : {}, done || data );
+    this.getDownloadUrl = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/download.url', done ? data : {}, done || data );
+    };
+
+    this.getUploadUrl = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/upload.url', done ? data : {}, done || data );
     };
 
   };
