@@ -113,7 +113,8 @@ function APIClient( client_id, client_secret, opts ) {
         file: fd
       };
 
-      request.post( opts, function ( err, res, body ) {
+      request[ method.toLowerCase() ]( opts, function ( err, res, body ) {
+
         if ( err ) {
           return done( err, null );
         }
@@ -122,7 +123,8 @@ function APIClient( client_id, client_secret, opts ) {
           return done( new Error( 'No response.' ), null );
         }
 
-        var body = JSON.parse( body );
+        body = JSON.parse( body );
+
         if ( body.err ) {
           return done( body.err, null );
         }
