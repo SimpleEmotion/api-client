@@ -548,8 +548,7 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
     this.listen = function ( action, entity, entity_id, done ) {
-      var uri = resource + '?stream=notify' + action ? '&action=' + action.toString() : '' + entity ? '&entity=' +
-                                                                                                      entity.toString() : '';
+      var uri = resource + '?stream=notify' + action ? '&action=' + action.toString() : '' + entity ? '&entity=' + entity.toString() : '' + entity_id ? '&entity_id=' + entity_id.toString() : '';
       api.request.authorized( 'GET', uri, null, done );
     };
 
