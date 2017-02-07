@@ -545,6 +545,12 @@ function APIClient( client_id, client_secret, opts ) {
 
     };
 
+    this.listen = function ( action, entity, entity_id, done ) {
+      var uri = resource + '?stream=notify' + action ? '&action=' + action.toString() : '' + entity ? '&entity=' +
+                                                                                                      entity.toString() : '';
+      api.request.authorized( 'GET', uri, null, done );
+    };
+
   };
 
   api.operations.endpoint = api.endpoint + '/operations';
