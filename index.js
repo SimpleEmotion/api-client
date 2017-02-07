@@ -113,7 +113,8 @@ function APIClient( client_id, client_secret, opts ) {
         file: fd
       };
 
-      request.post( opts, function ( err, res, body ) {
+      request[ method.toLowerCase() ]( opts, function ( err, res, body ) {
+
         if ( err ) {
           return done( err, null );
         }
@@ -122,7 +123,8 @@ function APIClient( client_id, client_secret, opts ) {
           return done( new Error( 'No response.' ), null );
         }
 
-        var body = JSON.parse( body );
+        body = JSON.parse( body );
+
         if ( body.err ) {
           return done( body.err, null );
         }
@@ -588,7 +590,7 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
     this.rename = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
+      api.request.authorized( 'POST', resource + '/rename', done ? data : {}, done || data );
     };
 
   };
@@ -615,14 +617,6 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'GET', resource, done ? data : {}, done || data );
     };
 
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
-    };
-
-    this.rename = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
-    };
-
     this.getDownloadUrl = function ( data, done ) {
       api.request.authorized( 'GET', resource + '/download.url', done ? data : {}, done || data );
     };
@@ -632,11 +626,15 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
     this.move = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/move', done ? data : {}, done || data );
+      api.request.authorized( 'POST', resource + '/move', done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
     };
 
     this.upload = function ( fd, done ) {
-      api.request.stream( 'POST', resource, done ? fd : {}, done || fd );
+      api.request.stream( 'PUT', resource, fd, done );
     };
 
   };
@@ -663,20 +661,20 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'GET', resource, done ? data : {}, done || data );
     };
 
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
-    };
-
-    this.rename = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
-    };
-
     this.getDownloadUrl = function ( data, done ) {
       api.request.authorized( 'GET', resource + '/download.url', done ? data : {}, done || data );
     };
 
     this.getUploadUrl = function ( data, done ) {
       api.request.authorized( 'GET', resource + '/upload.url', done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+    this.rename = function ( data, done ) {
+      api.request.authorized( 'POST', resource + '/rename', done ? data : {}, done || data );
     };
 
   };
@@ -699,24 +697,24 @@ function APIClient( client_id, client_secret, opts ) {
 
     var resource = api.storage.folder.endpoint + '/' + _id;
 
+    this.audio = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/audio', done ? data : {}, done || data );
+    };
+
     this.get = function ( data, done ) {
       api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+    };
+
+    this.move = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/move', done ? data : {}, done || data );
     };
 
     this.remove = function ( data, done ) {
       api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
     };
 
-    this.audio = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/audio', done ? data : {}, done || data );
-    };
-
     this.rename = function ( data, done ) {
       api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
-    };
-
-    this.move = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/move', done ? data : {}, done || data );
     };
 
   };
