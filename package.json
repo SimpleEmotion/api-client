@@ -22,6 +22,7 @@
     "node": "^6.9.4"
   },
   "dependencies": {
+    "eventsource": "^0.2.1",
     "request": "^2.79.0"
   },
   "devDependencies": {
