@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require( 'request' );
-var eventsource=require('eventsource');
+var eventsource = require( 'eventsource' );
 
 module.exports = APIClient;
 
@@ -93,7 +93,7 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-  api.request.listen=function(path, data, done){
+  api.request.listen = function ( path, data, done ) {
 
     api.oauth2.token.grant( scope, function ( err, result ) {
 
@@ -104,18 +104,18 @@ function APIClient( client_id, client_secret, opts ) {
       tokens = result;
 
       var opts = {
-        headers: {Authorization: 'Bearer ' + tokens.access_token}
+        headers: { Authorization: 'Bearer ' + tokens.access_token }
       };
 
-      var es = new eventsource( api.host + path,opts);
+      var es = new eventsource( api.host + path, opts );
 
-      es.addEventListener('message', function(e){
-        done(null, e);
-      });
+      es.addEventListener( 'message', function ( e ) {
+        done( null, e );
+      } );
 
-      es.addEventListener('error', function(err){
-        done(err, null);
-      });
+      es.addEventListener( 'error', function ( err ) {
+        done( err, null );
+      } );
 
     } );
 
@@ -577,7 +577,9 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
     this.listen = function ( action, entity, entity_id, done ) {
-      var uri = resource + '?stream=notify' + (action ? '&action=' + action.toString() : '') + (entity ? '&entity=' + entity.toString() : '') + (entity_id ? '&entity_id=' + entity_id.toString() : '');
+      var uri = resource + '?stream=notify' + (action ? '&action=' + action.toString() : '') +
+                (entity ? '&entity=' + entity.toString() : '') +
+                (entity_id ? '&entity_id=' + entity_id.toString() : '');
       api.request.listen( uri, null, done );
     };
 
