@@ -194,6 +194,10 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
     };
 
+    this.rename = function ( data, done ) {
+      api.request.authorized( 'POST', resource + '/rename', done ? data : {}, done || data );
+    };
+
     this.service = {
 
       endpoint: resource + '/service',
