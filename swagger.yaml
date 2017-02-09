@@ -1,0 +1,2273 @@
+swagger: "2.0"
+info:
+  version: 0.0.0
+  title: Simple Emotion API
+host: api.simpleemotion.com
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /directory/organization:
+    get:
+      description: Get a list of organizations you have access to.
+      operationId: directory.organization.list
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DirectoryListReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/DirectoryListRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /directory/organization/{_id}:
+    get:
+      description: Get an organization's data by its id.
+      operationId: directory.organization.get
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DirectoryGetReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/DirectoryGetRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /directory/organization/{_id}/rename:
+    post:
+      description: Rename the specified organization.
+      operationId: directory.organization.rename
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DirectoryRenameReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/DirectoryRenameRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /directory/organization/{_id}/user:
+    get:
+      description: List the users in the specified organization.
+      operationId: directory.organization.user.list
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DirectoryUserListReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/DirectoryUserListRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /directory/organization/{_id}/user/{user_id}:
+    post:
+      description: Add the specified user to the specified organization.
+      operationId: directory.organization.user.add
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: user_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DirectoryUserAddReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/DirectoryUserAddRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Remove a the specified user from the specified organization.
+      operationId: directory.organization.user.remove
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: user_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: .
+  /directory/organization/{_id}/user/invitation/{user_email}:
+    post:
+      description: Invite a email address to join the specified organization.
+      operationId: directory.organization.user.invitation.add
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: user_email
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DirectoryUserInvitationAddReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/DirectoryUserInvitationAddRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Remove an outstanding invited user email address from the invited users list for the specified organization.
+      operationId: directory.organization.user.invitation.remove
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: user_email
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DirectoryUserInvitationRemoveReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/DirectoryUserInvitationRemoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /operations:
+    get:
+      description: Get a list of operations.
+      operationId: operations.list
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OperationListReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OperationListRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /operations/{_id}:
+    get:
+      description: Get the specified operation's info.
+      operationId: operations.get
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OperationGetReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OperationGetRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    patch:
+      description: Update the specified operation.
+      operationId: operations.udpate
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OperationUpdateReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OperationUpdateRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Remove the specified operation. Operation must be completed or not in porgress.
+      operationId: operations.remove
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OperationRemoveReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OperationRemoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /oauth2/certificates:
+    get:
+      description: List public certificates for the keys used to sign the access JWTs.
+      operationId: oauth2.certificates
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2CertificatesRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /oauth2/credentials:
+    get:
+      description: List client credentials for your account.
+      operationId: oauth2.credentials.list
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2CredentialsListReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2CredentialsListRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Create a set of client credentials for your user account.
+      operationId: oauth2.credentials.generate
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2CredentialsGenerateReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2CredentialsGenerateRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /oauth2/credentials/{client_id}:
+    get:
+      description: Get the specified client credential information.
+      operationId: oauth2.credentials.get
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2CredentialsGetReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2CredentialsGetRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Remove the specified set of client credentials.
+      operationId: oauth2.credentials.remove
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2CredentialsRemoveReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2CredentialsRemoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /oauth2/revoke:
+    post:
+      description: Revoke a refresh token for a set of client credentials associated with your user account. You must provide a token and the client credentials that that token is associated with.
+      operationId: oauth2.token.revoke
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2TokenRevokeReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2TokenRevokeRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /oauth2/token:
+    post:
+      description: Issue an access token for your account. Access tokens expire after 30 seconds. If you were provided with a refresh token you can reauthenticate with that token. Otherwise you must resubmit your credentials. If you have two-factor enabled and authenticate with your user name and password, you will will be provided with a limited scope two-factor access token. To obtain full access, request a two factor grant type with this token and your TOTP.
+      operationId: oauth2.token.grant
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2TokenGrantReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2TokenGrantRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /oauth2/user/{_id}:
+    get:
+      description: Get the specified user's information.
+      operationId: oauth2.user.get
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2UserGetReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2UserGetRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /oauth2/user/{_id}/twoFactor:
+    patch:
+      description: Verify a two factor TOTP for the specified user. This will fail if two factor authentication is not enabled. If two factor is enrolled but has not been enabled, this will enable it.
+      operationId: oauth2.user.twoFactor.verify
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2UserTwoFactorVerifyReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2UserTwoFactorVerifyRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Enroll the specified user in two factor authentication. All subsequent password/username authentications will require a TOTP.
+      operationId: oauth2.user.twoFactor.enroll
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2UserTwoFactorEnrollReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2UserTwoFactorEnrollRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Disable two factor authentication for the specified user. If two factor authentication is enabled you must provide a TOTP. If two factor is enrolled but not enabled no TOTP needs to be provided.
+      operationId: oauth2.user.twoFactor.disable
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/OAuth2UserTwoFactorDisableReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/OAuth2UserTwoFactorDisableRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/analysis:
+    get:
+      description: Get a list of analysis objects.
+      operationId: storage.analysis.list
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAnalysisListReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAnalysisListRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/analysis/{_id}:
+    get:
+      description: Get the specified analysis object's information.
+      operationId: storage.analysis.get
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAnalysisGetReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAnalysisGetRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Remove the specified analysis object.
+      operationId: storage.analysis.remove
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAnalysisRemoveReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAnalysisRemoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/analysis/{_id}/rename:
+    post:
+      description: Rename the specified analysis object.
+      operationId: storage.analysis.rename
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAnalysisRenameReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAnalysisRenameRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/audio:
+    get: 
+      description: Get a list of audio objects.
+      operationId: storage.audio.list
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAudioListReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAudioListRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Add an audio object.
+      operationId: storage.audio.add
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAudioAddReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAudioAddRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/audio/{_id}:
+    get:
+      description: Get the specified audio data.
+      operationId: storage.audio.get
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAudioGetReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAudioGetRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      description: Upload an audio file to cloud storage for the specified audio object.
+      operationId: storage.audio.upload
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: formData
+          in: formData
+          description: File you are uploading
+          required: true
+          type: file
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAudioUploadRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Remove the specified audio object.
+      operationId: storage.audio.remove
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAudioRemoveReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAudioRemoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/audio/{_id}/download.url:
+    get:
+      description: Get a download signed url for the specified audio object. The signed URL expires after 10 seconds. The download must start within that time.
+      operationId: storage.audio.getDownloadUrl
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAudioDownloadUrlReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAudioDownloadUrlRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/audio/{_id}/upload.url:
+    get:
+      description: Get an upload signed url for the specified audio object. The signed URL expires after 10 seconds. The upload must start within that time.
+      operationId: storage.audio.getUploadUrl
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAudioUploadUrlReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAudioUploadUrlRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/audio/{_id}/move:
+    post:
+      description: Move the specified audio object to a new destination.
+      operationId: storage.audio.move
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageAudioMoveReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageAudioMoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/features:
+    get:
+      description: Get a list of audio features objects.
+      operationId: storage.features.list
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFeaturesListReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFeaturesListRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/features/{_id}:
+    get:
+      description: Get the specified audio features object.
+      operationId: storage.features.get
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFeaturesGetReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFeaturesGetRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Remove the specified audio features object.
+      operationId: storage.features.remove
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFeaturesRemoveReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFeaturesRemoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/features/{_id}/download.url:
+    get:
+      description: Get a download signed url for the specified audio features object. The url expires in 10 seconds. The download must start in that time.
+      operationId: storage.features.getDownloadUrl
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFeaturesDownloadUrlReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFeaturesDownloadUrlRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/features/{_id}/upload.url:
+    get:
+      description: Get a upload signed url for the specified audio features object. The url expires in 10 seconds. The upload must start in that time.
+      operationId: storage.features.getUploadUrl
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFeaturesUploadUrlReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFeaturesUploadUrlRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/features/{_id}/rename:
+    post:
+      description: Rename the specified audio features object.
+      operationId: storage.features.rename
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFeaturesRenameReq'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFeaturesRenameRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /storage/folder:
+    get:
+      description: Get a list of folders.
+      operationId: storage.folder.list
+      responses:
+        200:
+          description: .
+    post:
+      description: Add a folder to the file storage system.
+      operationId: storage.folder.add
+      responses:
+        200:
+          description: .
+  /storage/folder/{_id}:
+    get:
+      description: Get the specified folder's information.
+      operationId: storage.folder.get
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: .
+    delete:
+      description: Remove the specified folder and all of its child folders and audio files.
+      operationId: storage.folder.remove
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: .
+  /storage/folder/{_id}/audio:
+    get:
+      description: List the audio files in the specified folder.
+      operationId: storage.audio.list
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: .
+  /storage/folder/{_id}/move:
+    post:
+      description: Move the specified folder to a new destination.
+      operationId: storage.folder.move
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: .
+  /storage/folder/{_id}/rename:
+    post:
+      description: Rename the specified folder.
+      operationId: storage.folder.rename
+      parameters:
+        - name: _id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: .
+  # Add analysis APIs
+definitions:
+  Error:
+    type: object
+    properties:
+      code:
+        type: number
+      api:
+        type: string
+      reason:
+        type: string
+      entity:
+        type: string
+      operation:
+        type: string
+      field:
+        type: string
+    required:
+    - code
+    - api
+    - reason
+    - operation
+  DirectoryListReq:
+    type: object
+    properties:
+      users:
+        type: object
+        description: A user we want to list organizations for.
+        properties:
+          _id:
+            type: string
+          email:
+            type: string
+      states:
+        description: Organization states to filter on.
+        type: object
+        properties: 
+          removed:
+            type: boolean
+      projection:
+        description: Project out certain properties in the object
+        type: object
+      offset:
+        description: Offset the start of the of returned returned. Must be a positive number.
+        type: number
+      limit:
+        description: Limit the number of results returned. Must be a positive number.
+        type: number
+  DirectoryListRes200:
+    type: object
+    properties:
+      total:
+        type: number
+      oragnizations:
+        type: array
+      offset:
+        type: number
+      limit:
+        type: number
+    required:
+      - total
+      - organizations
+      - offset
+      - limit
+  DirectoryGetReq:
+    type: object
+    properties:
+      users:
+        type: object
+        description: A user in the organization's users list.
+        properties:
+          _id:
+            type: string
+          email:
+            type: string
+      states:
+        description: Organization states to filter on.
+        type: object
+        properties: 
+          removed:
+            type: boolean
+      projection:
+        description: Project out certain properties in the object
+        type: object
+  DirectoryGetRes200:
+    type: object
+    properties:
+      oragnization:
+        type: object
+    required:
+      - organization
+  DirectoryRenameReq:
+    type: object
+    properties:
+      name:
+        description: New name of the organization.
+        type: string
+      users:
+        type: object
+        description: A user in the organization's users list.
+        properties:
+          _id:
+            type: string
+          email:
+            type: string
+      states:
+        description: Organization states to filter on.
+        type: object
+        properties: 
+          removed:
+            type: boolean
+    required:
+      - name
+  DirectoryRenameRes200:
+    type: object
+    default: {}
+  DirectoryUserListReq:
+    type: object
+    description: NOT IMPLEMENTED
+  DirectoryUserListRes200:
+    type: object
+    description: NOT IMPLEMENTED
+    default: {}
+  DirectoryUserAddReq:
+    type: object
+    properties:
+      users:
+        type: object
+        description: A user in the organization's users list.
+        properties:
+          _id:
+            type: string
+          email:
+            type: string
+  DirectoryUserAddRes200:
+    type: object
+    default: {}
+  DirectoryUserInvitationAddReq:
+    type: object
+    properties:
+       users:
+        type: object
+        description: A user in the organization's users list.
+        properties:
+          _id:
+            type: string
+          email:
+            type: string
+  DirectoryUserInvitationAddRes200:
+    type: object
+    default: {}
+  DirectoryUserInvitationRemoveReq:
+    type: object
+    properties:
+       users:
+        type: object
+        description: A user in the organization's users list.
+        properties:
+          _id:
+            type: string
+          email:
+            type: string
+  DirectoryUserInvitationRemoveRes200:
+    type: object
+    default: {}
+  OperationListReq:
+    type: object
+    properties:
+      states:
+        description: Operation states to filter on.
+        type: object
+        properties: 
+          completed:
+            type: boolean
+      projection:
+        description: Project out certain properties in the object
+        type: object
+      offset:
+        description: Offset the start of the of returned returned. Must be a positive number.
+        type: number
+      limit:
+        description: Limit the number of results returned. Must be a positive number.
+        type: number
+  OperationListRes200:
+    type: object
+    properties:
+      total:
+        type: number
+      operations:
+        type: array
+      offset:
+        type: number
+      limit:
+        type: number
+    required:
+      - total
+      - operations
+      - offset
+      - limit
+  OperationGetReq:
+    type: object
+    properties:
+      projection:
+        description: Project out certain properties in the object
+        type: object
+  OperationGetRes200:
+    type: object
+    properties:
+      operation:
+        type: object
+    required:
+      - operation
+  OperationUpdateReq:
+    type: object
+    properties:
+      worker:
+        description: Worker that is working on the project.
+        type: string
+      progress:
+        description: Current progress value
+        type: object
+        properties:
+          min:
+            type: number
+            default: 0
+          value:
+            type: number
+          max:
+            type: number
+            default: 100
+      status:
+        description: Progress status message
+        type: string
+      error:
+        description: Error object
+        type: object
+      result:
+        description: Result of the operation
+        type: object
+      log:
+        description: Log output of operation
+        type: object
+    required:
+      - worker
+      - progress.value
+  OperationUpdateRes200:
+    type: object
+    default: {}
+  OperationRemoveReq:
+    type: object
+  OperationRemoveRes200:
+    type: object
+    default: {}
+  OAuth2CertificatesRes200:
+    type: object
+    properties:
+      keys:
+        type: object
+        properties: 
+          type:
+            description: Type of key.
+            type: string
+            default: 'RSA'
+          algorithm:
+            description: Algorithm this key is used for.
+            type: string
+            default: 'RS256'
+          use:
+            description: What this key is used for.
+            type: string
+            default: 'sign'
+          key:
+            description: String value of key.
+            type: string
+        required:
+          - type
+          - algorithm
+          - use
+          - key
+    required:
+      - keys
+  OAuth2CredentialsListReq:
+    type: object
+    properties:
+      offset:
+        description: Offset the start of the of returned returned. Must be a positive number.
+        type: number
+      limit:
+        description: Limit the number of results returned. Must be a positive number.
+        type: number
+  OAuth2CredentialsListRes200:
+    type: object
+    properties:
+      total:
+        type: number
+      credentials:
+        type: array
+      offset:
+        type: number
+      limit:
+        type: number
+    required:
+      - total
+      - credentials
+      - offset
+      - limit
+  OAuth2CredentialsGenerateReq:
+    type: object
+    properties:
+      name:
+        description: Name for the set of credentials we're generating.
+        type: string
+  OAuth2CredentialsGenerateRes200:
+    type: object
+    properties:
+      credentials:
+        type: object
+        properties:
+          client_id:
+            type: string
+          client_secret:
+            type: string
+          role:
+            type: object
+            properties:
+              _id:
+                type: string
+              type: 
+                type: string
+            required:
+              - _id
+              - type
+        required:
+          - client_id
+          - client_secret
+          - role
+    required:
+      - credentials
+  OAuth2CredentialsGetReq:
+    type: object
+    default: {}
+  OAuth2CredentialsGetRes200:
+    type: object
+    properties:
+      credentials:
+        type: object
+    required:
+      - credentials
+  OAuth2CredentialsRemoveReq:
+    type: object
+    properties:
+      client_id:
+        description: Client credentials we want to remove.
+        type: string
+  OAuth2CredentialsRemoveRes200:
+    type: object
+    default: {}
+  OAuth2TokenRevokeReq:
+    type: object
+    properties:
+      client_id:
+        description: Client credentials id that is associated with the token we want to revoke.
+        type: string
+      client_secret:
+        description: Client credentials secret that is associated with the token we want to revoke.
+        type: string
+      token:
+        description: The refresh token or access token value we want to revoke.
+        type: string
+    required:
+      - client_id
+      - client_secret
+      - token
+  OAuth2TokenRevokeRes200:
+    type: object
+    default: {}
+  OAuth2TokenGrantReq:
+    type: object
+    properties:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+      grant_type:
+        type: string
+      scope:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      otp:
+        type: string
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    required:
+      - client_id
+      - client_secret
+  OAuth2TokenGrantRes200:
+    type: object
+    properties:
+      token_type:
+        description: Type of token we are getting.
+        type: string
+      expires_in:
+        description: Token lifetime in seconds.
+        type: number
+      access_token:
+        description: Access token value.
+        type: string
+      two_factor_required:
+        description: If true, then two factor authentication is enabled and you must use this token with the two factor grant type for full authentication.
+        type: string
+      refresh_token:
+        description: Refresh token value.
+        type: string
+    required:
+      - token_type
+      - expires_in
+      - access_token
+  OAuth2UserGetReq:
+    type: object
+    properties:
+      email:
+        description: User account email address
+        type: string
+  OAuth2UserGetRes200:
+    type: object
+    properties:
+      user:
+        type: object
+    required:
+      - user 
+  OAuth2UserTwoFactorVerifyReq:
+    type: object
+    properties:
+      otp:
+        description: TOTP value you are using to verify two factor with.
+        type: string
+    required:
+      - otp
+  OAuth2UserTwoFactorVerifyRes200:
+    type: object
+    properties:
+      valid:
+        description: Valid status of TOTP
+        type: boolean
+    required:
+      - valid
+  OAuth2UserTwoFactorEnrollReq:
+    type: object
+    properties:
+      returnType:
+        description: Type of enrollment validation retunred
+        type: string
+        enum: ['qrcode', 'secret']
+  OAuth2UserTwoFactorEnrollRes200:
+    type: object
+    properties:
+      secret:
+        description: Two factor secret
+        type: string
+      qrcode:
+        description: Two factor QR code for scanning. This is the default return if returnType is not specified
+        type: string
+  OAuth2UserTwoFactorDisableReq:
+    type: object
+    properties:
+      otp:
+        description: TOTP code
+        type: string
+  OAuth2UserTwoFactorDisableRes200:
+    type: object
+    default: {}
+  StorageAnalysisListReq:
+    type: object
+    properties:
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+      name: 
+        description: Name to filter on.
+        type: string
+      type:
+        description: Type to filter on.
+        type: string
+      version:
+        description: Version to filter on
+        type: object
+        properties:
+          major:
+            type: number
+          minor:
+            type: number
+          patch:
+            type: number
+          version:
+            type: number
+        required:
+          - major
+          - minor
+          - patch
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+      projection:
+        type: object
+        description: Values to project out.
+        default: {}
+      sort:
+        type: object
+        description: Values to sort on.
+        default: {}
+      offset:
+        type: number
+        description: List offset value.
+      limit:
+        type: number
+        description: List limit value.
+  StorageAnalysisListRes200:
+    type: object
+    properties:
+      total:
+        type: number
+      analyses:
+        type: array
+      offset:
+        type: number
+      limit:
+        type: number
+    required:
+      - total
+      - analyses
+      - offset
+      - limit
+  StorageAnalysisGetReq:
+    type: object
+    properties:
+      _id:
+        description: Analysis object _id.
+        type: string
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+      name: 
+        description: Name to filter on.
+        type: string
+      type:
+        description: Type to filter on.
+        type: string
+      version:
+        description: Version to filter on
+        type: object
+        properties:
+          major:
+            type: number
+          minor:
+            type: number
+          patch:
+            type: number
+          version:
+            type: number
+        required:
+          - major
+          - minor
+          - patch
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+      projection:
+        type: object
+        description: Values to project out.
+        default: {}
+  StorageAnalysisGetRes200:
+    type: object
+    properties:
+      analysis:
+        type: object
+    required:
+      - analysis
+  StorageAnalysisRemoveReq:
+    type: object
+    properties:
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+    required:
+      - audio
+  StorageAnalysisRemoveRes200:
+    type: object
+    default: {}
+  StorageAnalysisRenameReq:
+    type: object
+    properties:
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+      name: 
+        description: Name to set.
+        type: string
+    required:
+      - audio
+      - name
+  StorageAnalysisRenameRes200:
+    type: object
+    default: {}
+  StorageAudioListReq:
+    type: object
+    properties:
+      service:
+        type: string
+      name:
+        type: string
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+          processed:
+            type: boolean
+      projection:
+        type: object
+        description: Values to project out.
+        default: {}
+      sort:
+        type: object
+        description: Values to sort on.
+        default: {}
+      offset:
+        type: number
+        description: List offset value.
+      limit:
+        type: number
+        description: List limit value.
+  StorageAudioListRes200:
+    type: object
+    properties:
+      total:
+        type: number
+      audio:
+        type: array
+      offset:
+        type: number
+      limit:
+        type: number
+    required:
+      - total
+      - audio
+      - offset
+      - limit
+  StorageAudioAddReq:
+    type: object
+    properties:
+      destination:
+        description: Folder we are adding the audio file to.
+        type: object
+        properties:
+          owner:
+            type: object
+            properties:
+              _id:
+                type: string
+              type:
+                type: string
+            required:
+              - _id
+              - type
+          service:
+            type: string
+          name:
+            type: string
+        required:
+          - owner
+          - service
+          - name
+      basename:
+        description: Name of the folder we are adding
+        type: string
+      timestamps:
+        type: object
+        properties:
+          recorded:
+            description: Date object
+            type: object
+    required:
+      - destination
+      - basename
+  StorageAudioAddRes200:
+    type: object
+    properties:
+      audio:
+        type: object
+        properties:
+          _id:
+            type: string
+        required:
+          - _id
+    required:
+      - audio
+  StorageAudioGetReq:
+    type: object
+    properties:
+      service:
+        type: string
+      name:
+        type: string
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+          processed:
+            type: boolean
+  StorageAudioGetRes200:
+    type: object
+    properties:
+      audio:
+        type: object
+    required:
+      - audio
+  StorageAudioUploadRes200:
+    type: object
+    properties:
+      audio:
+        type: object
+    required:
+      - audio
+  StorageAudioRemoveReq:
+    type: object
+    default: {}
+  StorageAudioRemoveRes200:
+    type: object
+    default: {}
+  StorageAudioDownloadUrlReq:
+    type: object
+    properties:
+      service:
+        type: string
+      name:
+        type: string
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+          processed:
+            type: boolean
+  StorageAudioDownloadUrlRes200:
+    type: object
+    properties:
+      url:
+        type: string
+    required:
+      - url
+  StorageAudioUploadUrlReq:
+    type: object
+    properties:
+      service:
+        type: string
+      name:
+        type: string
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+          processed:
+            type: boolean
+  StorageAudioUploadUrlRes200:
+    type: object
+    properties:
+      url:
+        type: string
+    required:
+      - url
+  StorageAudioMoveReq:
+    type: object
+    properties:
+      destination:
+        description: Folder we are adding the audio file to.
+        type: object
+        properties:
+          owner:
+            type: object
+            properties:
+              _id:
+                type: string
+              type:
+                type: string
+            required:
+              - _id
+              - type
+          service:
+            type: string
+          name:
+            type: string
+        required:
+          - owner
+          - service
+          - name
+      basename:
+        description: Name of the folder we are adding
+        type: string
+      timestamps:
+        type: object
+        properties:
+          modified:
+            description: Date object
+            type: object
+        required:
+          - modified
+      owner:
+        type: object
+        properties:
+          _id:
+            type: string
+          type:
+            type: string
+        required:
+          - _id
+          - type
+      service:
+        type: string
+      name:
+        type: string
+    required:
+      - owner
+      - service
+      - name
+      - basename
+      - timestamps
+  StorageAudioMoveRes200:
+    type: object
+    default: {}
+  StorageFeaturesListReq:
+    type: object
+    properties:
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+      name: 
+        description: Name to filter on.
+        type: string
+      type:
+        description: Type to filter on.
+        type: string
+      version:
+        description: Version to filter on
+        type: object
+        properties:
+          major:
+            type: number
+          minor:
+            type: number
+          patch:
+            type: number
+          version:
+            type: number
+        required:
+          - major
+          - minor
+          - patch
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+      projection:
+        type: object
+        description: Values to project out.
+        default: {}
+      sort:
+        type: object
+        description: Values to sort on.
+        default: {}
+      offset:
+        type: number
+        description: List offset value.
+      limit:
+        type: number
+        description: List limit value.
+  StorageFeaturesListRes200:
+    type: object
+    properties:
+      total:
+        type: number
+      features:
+        type: array
+      offset:
+        type: number
+      limit:
+        type: number
+    required:
+      - total
+      - features
+      - offset
+      - limit
+  StorageFeaturesGetReq:
+    type: object
+    properties:
+      _id:
+        description: Features object _id.
+        type: string
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+      name: 
+        description: Name to filter on.
+        type: string
+      type:
+        description: Type to filter on.
+        type: string
+      version:
+        description: Version to filter on
+        type: object
+        properties:
+          major:
+            type: number
+          minor:
+            type: number
+          patch:
+            type: number
+          version:
+            type: number
+        required:
+          - major
+          - minor
+          - patch
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+      projection:
+        type: object
+        description: Values to project out.
+        default: {}
+  StorageFeaturesGetRes200:
+    type: object
+    properties:
+      features:
+        type: object
+    required:
+      - features
+  StorageFeaturesRemoveReq:
+    type: object
+    properties:
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+    required:
+      - audio
+  StorageFeaturesRemoveRes200:
+    type: object
+    default: {}
+  StorageFeaturesRenameReq:
+    type: object
+    properties:
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+      name: 
+        description: Name to set.
+        type: string
+    required:
+      - audio
+      - name
+  StorageFeaturesRenameRes200:
+    type: object
+    default: {}
+  StorageFeaturesDownloadUrlReq:
+    type: object
+    properties:
+      _id:
+        description: Features object _id.
+        type: string
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+      name: 
+        description: Name to filter on.
+        type: string
+      type:
+        description: Type to filter on.
+        type: string
+      version:
+        description: Version to filter on
+        type: object
+        properties:
+          major:
+            type: number
+          minor:
+            type: number
+          patch:
+            type: number
+          version:
+            type: number
+        required:
+          - major
+          - minor
+          - patch
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+      projection:
+        type: object
+        description: Values to project out.
+        default: {}
+  StorageFeaturesDownloadUrlRes200:
+    type: object
+    properties:
+      url:
+        type: string
+    required:
+      - url
+  StorageFeaturesUploadUrlReq:
+    type: object
+    properties:
+      _id:
+        description: Features object _id.
+        type: string
+      audio:
+        description: Audio objects to filter on.
+        type: object
+        properties:
+          _id:
+            type: string
+        required: 
+          - _id
+      name: 
+        description: Name to filter on.
+        type: string
+      type:
+        description: Type to filter on.
+        type: string
+      version:
+        description: Version to filter on
+        type: object
+        properties:
+          major:
+            type: number
+          minor:
+            type: number
+          patch:
+            type: number
+          version:
+            type: number
+        required:
+          - major
+          - minor
+          - patch
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+      projection:
+        type: object
+        description: Values to project out.
+        default: {}
+  StorageFeaturesUploadUrlRes200:
+    type: object
+    properties:
+      url:
+        type: string
+    required:
+      - url
