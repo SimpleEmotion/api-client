@@ -174,6 +174,14 @@ function APIClient( client_id, client_secret, opts ) {
     tokens = auth_tokens || {};
   };
 
+  api.callcenter = {};
+
+  api.callcenter.endpoint = api.endpoint + '/callcenter';
+
+  api.callcenter.detectEvents = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.callcenter.endpoint + '/detectEvents/' + audio_id, null, done );
+  };
+
   api.directory = {};
 
   api.directory.endpoint = api.endpoint + '/directory';
@@ -252,6 +260,14 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.directory.organization.list = function ( data, done ) {
     api.request.authorized( 'GET', api.directory.organization.endpoint, data, done );
+  };
+
+  api.emotion = {};
+
+  api.emotion.endpoint = api.endpoint + '/emotion';
+
+  api.emotion.classify = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.emotion.endpoint + '/classify/' + audio_id, null, done );
   };
 
   api.oauth2 = {};
@@ -581,9 +597,9 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
     this.listen = function ( action, entity, entity_id, done ) {
-      var uri = resource + '?stream=notify' + (action ? '&action=' + action.toString() : '') +
-                (entity ? '&entity=' + entity.toString() : '') +
-                (entity_id ? '&entity_id=' + entity_id.toString() : '');
+      var uri = resource + '?stream=notify' + ( action ? '&action=' + action.toString() : '' ) +
+                ( entity ? '&entity=' + entity.toString() : '' ) +
+                ( entity_id ? '&entity_id=' + entity_id.toString() : '' );
       api.request.listen( uri, null, done );
     };
 
@@ -601,6 +617,26 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.operations.next = function ( data, done ) {
     api.request.authorized( 'GET', api.operations.endpoint + '/next', data, done );
+  };
+
+  api.speaker = {};
+
+  api.speaker.endpoint = api.endpoint + '/speaker';
+
+  api.speaker.diarize = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.speaker.endpoint + '/diarize/' + audio_id, null, done );
+  };
+
+  api.speech = {};
+
+  api.speech.endpoint = api.endpoint + '/speech';
+
+  api.speech.detect = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.speech.endpoint + '/detect/' + audio_id, null, done );
+  };
+
+  api.speech.transcribe = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.speech.endpoint + '/transcribe/' + audio_id, null, done );
   };
 
   api.storage = {};
