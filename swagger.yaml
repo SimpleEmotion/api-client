@@ -35,7 +35,7 @@ paths:
   /callcenter/detectEvents/{audio_id}:
     post:
       description: Start a call center detect events operation
-      operationId: callcenter.detectEvent
+      operationId: callcenter.detectEvents
       parameters:
         - name: audio_id
           in: path
