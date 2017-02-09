@@ -20,7 +20,7 @@ function APIClient( client_id, client_secret, opts ) {
 
   opts = opts || {};
   api.host = opts.host || 'https://api.simpleemotion.com';
-  api.endpoint = '/';
+  api.endpoint = '';
 
   var scope = 'oauth2 directory';
   var tokens = {};
