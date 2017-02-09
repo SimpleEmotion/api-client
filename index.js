@@ -274,6 +274,14 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'POST', api.emotion.endpoint + '/classify/' + audio_id, null, done );
   };
 
+  api.language = {};
+
+  api.language.endpoint = api.endpoint + '/language';
+
+  api.language.analyzeTranscript = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.language.endpoint + '/analyzeTranscript/' + audio_id, null, done );
+  };
+
   api.oauth2 = {};
 
   api.oauth2.endpoint = api.endpoint + '/oauth2';
