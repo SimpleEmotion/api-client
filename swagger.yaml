@@ -19,6 +19,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
       responses:
         200:
           description: Success.
@@ -59,6 +65,12 @@ paths:
       description: Get a list of organizations you have access to.
       operationId: directory.organization.list
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -86,6 +98,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -113,6 +131,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -140,6 +164,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -171,6 +201,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -197,6 +233,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: user_id
           in: path
           required: true
@@ -217,6 +259,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -247,6 +295,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -274,6 +328,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
       responses:
         200:
           description: Success.
@@ -296,6 +356,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
       responses:
         200:
           description: Success.
@@ -314,6 +380,12 @@ paths:
       description: Get a list of operations.
       operationId: operations.list
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -341,6 +413,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -367,6 +445,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -393,6 +477,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -433,6 +523,12 @@ paths:
       description: List client credentials for your account.
       operationId: oauth2.credentials.list
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -455,6 +551,12 @@ paths:
       description: Create a set of client credentials for your user account.
       operationId: oauth2.credentials.generate
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -482,6 +584,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -508,6 +616,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -581,6 +695,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -608,6 +728,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -634,6 +760,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -660,6 +792,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -687,6 +825,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
       responses:
         200:
           description: Success.
@@ -709,6 +853,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
       responses:
         200:
           description: Success.
@@ -731,6 +881,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
       responses:
         200:
           description: Success.
@@ -749,6 +905,12 @@ paths:
       description: Get a list of analysis objects.
       operationId: storage.analysis.list
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -776,6 +938,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -802,6 +970,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -829,6 +1003,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -852,6 +1032,12 @@ paths:
       description: Get a list of audio objects.
       operationId: storage.audio.list
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -874,6 +1060,12 @@ paths:
       description: Add an audio object.
       operationId: storage.audio.add
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -901,6 +1093,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -929,6 +1127,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: formData
           in: formData
           description: File you are uploading
@@ -955,6 +1159,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -982,6 +1192,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1009,6 +1225,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1036,6 +1258,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1059,6 +1287,12 @@ paths:
       description: Get a list of audio features objects.
       operationId: storage.features.list
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1086,6 +1320,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1112,6 +1352,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1139,6 +1385,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1166,6 +1418,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1193,6 +1451,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1216,6 +1480,12 @@ paths:
       description: Get a list of folders.
       operationId: storage.folder.list
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1238,6 +1508,12 @@ paths:
       description: Add a folder to the file storage system.
       operationId: storage.folder.add
       parameters:
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1265,6 +1541,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1291,6 +1573,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1318,6 +1606,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1345,6 +1639,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
@@ -1372,6 +1672,12 @@ paths:
           in: path
           required: true
           type: string
+        - name: authentication
+          in: header
+          description: Authentication token in "Bearer {token}" format
+          required: true
+          type: string
+          format: string
         - name: body
           in: body
           required: true
