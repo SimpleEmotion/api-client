@@ -10,6 +10,50 @@ consumes:
 produces:
   - application/json
 paths:
+  /callcenter/analyze/{audio_id}:
+    post:
+      description: Start a call center analysis operation
+      operationId: callcenter.analyze
+      parameters:
+        - name: audio_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/AnalysisOperationRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /callcenter/detectEvents/{audio_id}:
+    post:
+      description: Start a call center detect events operation
+      operationId: callcenter.detectEvent
+      parameters:
+        - name: audio_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/AnalysisOperationRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
   /directory/organization:
     get:
       description: Get a list of organizations you have access to.
@@ -213,6 +257,50 @@ paths:
           description: Success.
           schema:
             $ref: '#/definitions/DirectoryUserInvitationRemoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /emotion/classify/{audio_id}:
+    post:
+      description: Start an emotion classify operation
+      operationId: emotion.classify
+      parameters:
+        - name: audio_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/AnalysisOperationRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /language/analyzeTranscript/{audio_id}:
+    post:
+      description: Start an language analyze transcript operation
+      operationId: language.analyzeTranscript
+      parameters:
+        - name: audio_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/AnalysisOperationRes200'
         400:
           description: Validation error.
           schema:
@@ -582,6 +670,72 @@ paths:
           description: Success.
           schema:
             $ref: '#/definitions/OAuth2UserTwoFactorDisableRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /speaker/diarize/{audio_id}:
+    post:
+      description: Start a speaker diarize operation
+      operationId: speaker.diarize
+      parameters:
+        - name: audio_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/AnalysisOperationRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /speech/detect/{audio_id}:
+    post:
+      description: Start a speech detect operation
+      operationId: speech.detect
+      parameters:
+        - name: audio_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/AnalysisOperationRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
+  /speech/transcribe/{audio_id}:
+    post:
+      description: Start a speech transcribe operation
+      operationId: speech.transcribe
+      parameters:
+        - name: audio_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/AnalysisOperationRes200'
         400:
           description: Validation error.
           schema:
@@ -962,12 +1116,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/StorageFeaturesRemoveReq'
+            $ref: '#/definitions/StorageFeaturesGetReq'
       responses:
         200:
           description: Success.
           schema:
-            $ref: '#/definitions/StorageFeaturesRemoveRes200'
+            $ref: '#/definitions/StorageFeaturesGetRes200'
         400:
           description: Validation error.
           schema:
@@ -1061,15 +1215,47 @@ paths:
     get:
       description: Get a list of folders.
       operationId: storage.folder.list
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFolderListReq'
       responses:
         200:
-          description: .
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFolderListRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
     post:
       description: Add a folder to the file storage system.
       operationId: storage.folder.add
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFolderAddReq'
       responses:
         200:
-          description: .
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFolderAddRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
   /storage/folder/{_id}:
     get:
       description: Get the specified folder's information.
@@ -1079,9 +1265,24 @@ paths:
           in: path
           required: true
           type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFolderGetReq'
       responses:
         200:
-          description: .
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFolderGetRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       description: Remove the specified folder and all of its child folders and audio files.
       operationId: storage.folder.remove
@@ -1090,9 +1291,24 @@ paths:
           in: path
           required: true
           type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFolderRemoveReq'
       responses:
         200:
-          description: .
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFolderRemoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
   /storage/folder/{_id}/audio:
     get:
       description: List the audio files in the specified folder.
@@ -1102,9 +1318,24 @@ paths:
           in: path
           required: true
           type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFolderAudioReq'
       responses:
         200:
-          description: .
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFolderAudioRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
   /storage/folder/{_id}/move:
     post:
       description: Move the specified folder to a new destination.
@@ -1114,9 +1345,24 @@ paths:
           in: path
           required: true
           type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFolderMoveReq'
       responses:
         200:
-          description: .
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFolderMoveRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
   /storage/folder/{_id}/rename:
     post:
       description: Rename the specified folder.
@@ -1126,10 +1372,24 @@ paths:
           in: path
           required: true
           type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/StorageFolderRenameReq'
       responses:
         200:
-          description: .
-  # Add analysis APIs
+          description: Success.
+          schema:
+            $ref: '#/definitions/StorageFolderRenameRes200'
+        400:
+          description: Validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Database error.
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
@@ -1151,6 +1411,18 @@ definitions:
     - api
     - reason
     - operation
+  AnalysisOperationRes200:
+    type: object
+    properties:
+      operation:
+        type: object
+        properties: 
+          _id:
+            type: string
+        required:
+          - _id
+    required: 
+      - operation
   DirectoryListReq:
     type: object
     properties:
@@ -2271,3 +2543,131 @@ definitions:
         type: string
     required:
       - url
+  StorageFolderListReq:
+    type: object
+    properties:
+      service:
+        type: string
+      name:
+        type: string
+      projection:
+        type: object
+        description: Values to project out.
+        default: {}
+      sort:
+        type: object
+        description: Values to sort on.
+        default: {}
+      offset:
+        type: number
+        description: List offset value.
+      limit:
+        type: number
+        description: List limit value.
+  StorageFolderListRes200:
+    type: object
+    properties:
+      total:
+        type: number
+      folders:
+        type: array
+      offset:
+        type: number
+      limit:
+        type: number
+    required:
+      - total
+      - folders
+      - offset
+      - limit
+  StorageFolderAddReq:
+    type: object
+    properties:
+      destination:
+        description: Folder we are adding the audio file to.
+        type: object
+        properties:
+          owner:
+            type: object
+            properties:
+              _id:
+                type: string
+              type:
+                type: string
+            required:
+              - _id
+              - type
+          service:
+            type: string
+          name:
+            type: string
+        required:
+          - owner
+          - service
+          - name
+      basename:
+        description: Name of the folder we are adding
+        type: string
+    required:
+      - destination
+      - basename
+  StorageFolderAddRes200:
+    type: object
+    properties:
+      folder:
+        type: object
+        properties:
+          _id:
+            type: string
+        required:
+          - _id
+    required:
+      - folder
+  StorageFolderGetReq:
+    type: object
+    properties:
+      service:
+        type: string
+      name:
+        type: string
+      states:
+        description: States to filter on.
+        type: object
+        properties:
+          removed:
+            type: boolean
+  StorageFolderGetRes200:
+    type: object
+    properties:
+      folder:
+        type: object
+    required:
+      - folder
+  StorageFolderRemoveReq:
+    type: object
+    description: Not implemented
+    default: {}
+  StorageFolderRemoveRes200:
+    type: object
+    default: {}
+  StorageFolderAudioReq:
+    type: object
+    description: Not implemented
+    default: {}
+  StorageFolderAudioRes200:
+    type: object
+    default: {}
+  StorageFolderMoveReq:
+    type: object
+    description: Not implemented
+    default: {}
+  StorageFolderMoveRes200:
+    type: object
+    default: {}
+  StorageFolderRenameReq:
+    type: object
+    description: Not implemented
+    default: {}
+  StorageFolderRenameRes200:
+    type: object
+    default: {}
