@@ -178,6 +178,10 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.callcenter.endpoint = api.endpoint + '/callcenter';
 
+  api.callcenter.analyze = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.callcenter.endpoint + '/analyze/' + audio_id, null, done );
+  };
+
   api.callcenter.detectEvents = function ( audio_id, done ) {
     api.request.authorized( 'POST', api.callcenter.endpoint + '/detectEvents/' + audio_id, null, done );
   };
