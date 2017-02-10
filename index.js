@@ -20,9 +20,9 @@ function APIClient( client_id, client_secret, opts ) {
 
   opts = opts || {};
   api.host = opts.host || 'https://api.simpleemotion.com';
-  api.endpoint = '';
+  api.endpoint = opts.endpoint || '';
 
-  var scope = 'oauth2 directory';
+  var scope = opts.scope || 'oauth2 directory';
   var tokens = {};
 
   api.request = function ( opts, done ) {
@@ -36,6 +36,11 @@ function APIClient( client_id, client_secret, opts ) {
         return done( new Error( 'No response.' ), null );
       }
 
+      try {
+        body = JSON.parse( body );
+      }
+      catch ( err ) {}
+
       if ( body.err ) {
         return done( body.err, null );
       }
@@ -47,16 +52,28 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.request.authorized = function ( method, path, body, done ) {
 
-    //TODO: if method !== GET json body otherwise set X-GET-CRITERIA header with serialized json and set accepts json header,
-
     var opts = {
       method: method,
       uri: api.host + path,
       headers: {
-        Authorization: 'Bearer ' + tokens.access_token
-      },
-      json: body || {}
+        'Authorization': 'Bearer ' + tokens.access_token,
+        'Content-Type': 'application/json'
+      }
     };
+
+    if ( body ) {
+
+      // GET requests cannot have body
+      if ( method.toUpperCase() !== 'GET' ) {
+        opts.json = body;
+      }
+
+      // So put the criteria in the header
+      else {
+        opts.headers[ 'X-GET-CRITERIA' ] = JSON.stringify( body );
+      }
+
+    }
 
     if ( !tokens.access_token ) {
       return reauthorize();
@@ -296,28 +313,12 @@ function APIClient( client_id, client_secret, opts ) {
 
     var resource = api.oauth2.endpoint + '/' + client_id;
 
-    this.get = function ( done ) {
-      api.request.authorized( 'GET', resource, null, function ( err, result ) {
-
-        if ( err ) {
-          return done( err, null );
-        }
-
-        done( err, result );
-
-      } );
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, done ? data : null, done || data );
     };
 
-    this.remove = function ( done ) {
-      api.request.authorized( 'DELETE', resource, null, function ( err, result ) {
-
-        if ( err ) {
-          return done( err, null );
-        }
-
-        done( err, result );
-
-      } );
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
   };
@@ -375,63 +376,8 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-  api.oauth2.credentials.get = function ( client_id, done ) {
-
-    if ( !done ) {
-      done = client_id;
-      client_id = api.credentials.client_id;
-    }
-
-    api.request.authorized(
-      'GET',
-      api.oauth2.credentials.endpoint + '/' + client_id,
-      {},
-      function ( err, result ) {
-
-        if ( err ) {
-          return done( err, null, null );
-        }
-
-        done( err, result );
-
-      }
-    );
-
-  };
-
-  api.oauth2.credentials.remove = function ( client_id, done ) {
-
-    if ( !done ) {
-      done = client_id;
-      client_id = api.credentials.client_id;
-    }
-
-    api.request.authorized(
-      'DELETE',
-      api.oauth2.credentials.endpoint + '/' + client_id,
-      {},
-      function ( err, result ) {
-
-        if ( err ) {
-          return done( err, null, null );
-        }
-
-        done( err, result );
-
-      }
-    );
-
-  };
-
-  api.oauth2.credentials.list = function ( query, done ) {
-
-    if ( !done ) {
-      done = query;
-      query = {};
-    }
-
-    api.request.authorized( 'GET', api.oauth2.credentials.endpoint, query, done );
-
+  api.oauth2.credentials.list = function ( data, done ) {
+    api.request.authorized( 'GET', api.oauth2.credentials.endpoint, done ? data : null, done || data );
   };
 
   api.oauth2.token = function Token( token ) {
