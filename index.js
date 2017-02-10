@@ -47,6 +47,8 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.request.authorized = function ( method, path, body, done ) {
 
+    //TODO: if method !== GET json body otherwise set X-GET-CRITERIA header with serialized json and set accepts json header,
+
     var opts = {
       method: method,
       uri: api.host + path,
