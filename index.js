@@ -311,7 +311,7 @@ function APIClient( client_id, client_secret, opts ) {
       return new Credentials( client_id );
     }
 
-    var resource = api.oauth2.endpoint + '/' + client_id;
+    var resource = api.oauth2.credentials.endpoint + '/' + client_id;
 
     this.get = function ( data, done ) {
       api.request.authorized( 'GET', resource, done ? data : null, done || data );
