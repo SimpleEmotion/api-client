@@ -546,7 +546,7 @@ function APIClient( client_id, client_secret, opts ) {
   api.oauth2.user.endpoint = api.oauth2.endpoint + '/user';
 
   api.oauth2.user.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.oauth2.user.endpoint, data, done );
+    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/register', data, done );
   };
 
   api.oauth2.user.list = function ( data, done ) {
