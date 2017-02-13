@@ -112,7 +112,8 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-  api.request.listen = function ( path, data, done ) {
+  //Path is path to resource, cb is on message callback, done is after creation callback
+  api.request.listen = function ( path, cb, done ) {
 
     api.oauth2.token.grant( scope, function ( err, result ) {
 
@@ -126,19 +127,29 @@ function APIClient( client_id, client_secret, opts ) {
         headers: { Authorization: 'Bearer ' + tokens.access_token }
       };
 
-      var es = new eventsource( api.host + path, opts );
+      try{
 
-      es.addEventListener( 'message', function ( e ) {
-        var message;
-        try {
-          message = JSON.parse( e.data );
-        } catch(e){}
-        done( null, message );
-      } );
+        var es = new eventsource( api.host + path, opts );
 
-      es.addEventListener( 'error', function ( err ) {
-        done( err, null );
-      } );
+        es.addEventListener( 'message', function ( e ) {
+          var message;
+          try {
+            message = JSON.parse( e.data );
+          } catch(e){}
+          cb( null, message );
+        } );
+
+        es.addEventListener( 'error', function ( err ) {
+          cb( err, null );
+        } );
+
+        console.log('here11');
+
+        done(null, es);
+      }
+      catch(err){
+        done(err, null);
+      }
 
     } );
 
@@ -560,11 +571,11 @@ function APIClient( client_id, client_secret, opts ) {
 
     };
 
-    this.listen = function ( action, entity, entity_id, done ) {
+    this.listen = function ( action, entity, entity_id, cb, done ) {
       var uri = resource + '?stream=notify' + ( action ? '&action=' + action.toString() : '' ) +
                 ( entity ? '&entity=' + entity.toString() : '' ) +
                 ( entity_id ? '&entity_id=' + entity_id.toString() : '' );
-      api.request.listen( uri, null, done );
+      api.request.listen( uri, cb, done );
     };
 
   };
