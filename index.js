@@ -129,7 +129,11 @@ function APIClient( client_id, client_secret, opts ) {
       var es = new eventsource( api.host + path, opts );
 
       es.addEventListener( 'message', function ( e ) {
-        done( null, e );
+        var message;
+        try {
+          message = JSON.parse( e.data );
+        } catch(e){}
+        done( null, message );
       } );
 
       es.addEventListener( 'error', function ( err ) {
