@@ -336,6 +336,16 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
+    this.callback = {};
+
+    this.callback.register = function(data, done){
+      api.request.authorized( 'PATCH', resource+'/callback', done ? data : null, done || data );
+    };
+
+    this.callback.deregister = function(data, done){
+      api.request.authorized( 'DELETE', resource+'/callback', done ? data : null, done || data );
+    };
+
   };
 
   api.oauth2.credentials.endpoint = api.oauth2.endpoint + '/credentials';
