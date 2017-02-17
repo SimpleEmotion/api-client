@@ -127,7 +127,7 @@ function APIClient( client_id, client_secret, opts ) {
         headers: { Authorization: 'Bearer ' + tokens.access_token }
       };
 
-      try{
+      try {
 
         var es = new eventsource( api.host + path, opts );
 
@@ -135,7 +135,7 @@ function APIClient( client_id, client_secret, opts ) {
           var message;
           try {
             message = JSON.parse( e.data );
-          } catch(e){}
+          } catch ( e ) {}
           cb( null, message );
         } );
 
@@ -145,10 +145,10 @@ function APIClient( client_id, client_secret, opts ) {
 
         console.log('here11');
 
-        done(null, es);
+        done( null, es );
       }
-      catch(err){
-        done(err, null);
+      catch ( err ) {
+        done( err, null );
       }
 
     } );
@@ -444,6 +444,7 @@ function APIClient( client_id, client_secret, opts ) {
         email: data.email,
         password: data.password,
         otp: data.otp,
+        code: data.code,
         access_token: data.access_token,
         refresh_token: tokens.refresh_token,
         scope: ( Array.isArray( scope ) ? scope.join( ' ' ) : scope ) || ''
