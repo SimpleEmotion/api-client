@@ -112,7 +112,7 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-  //Path is path to resource, cb is on message callback, done is after creation callback
+  // Path is path to resource, cb is on message callback, done is after creation callback
   api.request.listen = function ( path, cb, done ) {
 
     api.oauth2.token.grant( scope, function ( err, result ) {
@@ -135,7 +135,8 @@ function APIClient( client_id, client_secret, opts ) {
           var message;
           try {
             message = JSON.parse( e.data );
-          } catch ( e ) {}
+          }
+          catch ( e ) {}
           cb( null, message );
         } );
 
@@ -143,7 +144,7 @@ function APIClient( client_id, client_secret, opts ) {
           cb( err, null );
         } );
 
-        console.log('here11');
+        console.log( 'here11' );
 
         done( null, es );
       }
@@ -316,6 +317,10 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'POST', api.language.endpoint + '/analyzeTranscript/' + audio_id, null, done );
   };
 
+  api.language.extractProblemSummary = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.language.endpoint + '/extractProblemSummary/' + audio_id, null, done );
+  };
+
   api.oauth2 = {};
 
   api.oauth2.endpoint = api.endpoint + '/oauth2';
@@ -338,12 +343,12 @@ function APIClient( client_id, client_secret, opts ) {
 
     this.callback = {};
 
-    this.callback.register = function(data, done){
-      api.request.authorized( 'PATCH', resource+'/callback', done ? data : null, done || data );
+    this.callback.register = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/callback', done ? data : null, done || data );
     };
 
-    this.callback.deregister = function(data, done){
-      api.request.authorized( 'DELETE', resource+'/callback', done ? data : null, done || data );
+    this.callback.deregister = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource + '/callback', done ? data : null, done || data );
     };
 
   };
@@ -785,15 +790,20 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'GET', api.storage.folder.endpoint, query, done );
   };
 
+  Object.freeze( this.callcenter );
   Object.freeze( this.directory.organization.service );
   Object.freeze( this.directory.organization.user );
   Object.freeze( this.directory.organization );
   Object.freeze( this.directory );
+  Object.freeze( this.emotion );
+  Object.freeze( this.language );
   Object.freeze( this.oauth2.credentials );
   Object.freeze( this.oauth2.token );
   Object.freeze( this.oauth2.twoFactor );
   Object.freeze( this.oauth2.user );
   Object.freeze( this.operations );
+  Object.freeze( this.speaker );
+  Object.freeze( this.speech );
   Object.freeze( this.storage.analysis );
   Object.freeze( this.storage.audio );
   Object.freeze( this.storage.features );
