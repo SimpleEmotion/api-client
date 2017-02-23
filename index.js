@@ -343,11 +343,11 @@ function APIClient( client_id, client_secret, opts ) {
 
     this.callback = {};
 
-    this.callback.register = function ( data, done ) {
+    this.callback.add = function ( data, done ) {
       api.request.authorized( 'PATCH', resource + '/callback', done ? data : null, done || data );
     };
 
-    this.callback.deregister = function ( data, done ) {
+    this.callback.remove = function ( data, done ) {
       api.request.authorized( 'DELETE', resource + '/callback', done ? data : null, done || data );
     };
 
