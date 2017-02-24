@@ -341,14 +341,14 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
-    this.callback = {};
+    this.redirect_uri = {};
 
-    this.callback.add = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/callback', done ? data : null, done || data );
+    this.redirect_uri.add = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/redirect_uri', done ? data : null, done || data );
     };
 
-    this.callback.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource + '/callback', done ? data : null, done || data );
+    this.redirect_uri.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource + '/redirect_uri', done ? data : null, done || data );
     };
 
   };
