@@ -344,7 +344,7 @@ function APIClient( client_id, client_secret, opts ) {
     this.redirect_uri = {};
 
     this.redirect_uri.add = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/redirect_uri', done ? data : null, done || data );
+      api.request.authorized( 'PUT', resource + '/redirect_uri', done ? data : null, done || data );
     };
 
     this.redirect_uri.remove = function ( data, done ) {
