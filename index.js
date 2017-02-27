@@ -462,6 +462,7 @@ function APIClient( client_id, client_secret, opts ) {
         code: data.code,
         access_token: data.access_token,
         refresh_token: tokens.refresh_token,
+        redirect_uri: data.redirect_uri,
         scope: ( Array.isArray( scope ) ? scope.join( ' ' ) : scope ) || ''
       }
     };
