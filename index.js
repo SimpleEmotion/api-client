@@ -226,7 +226,6 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-
   api.communication.email.next = function ( done ) {
     api.request.authorized( 'GET', api.communication.email.endpoint, null, done );
   };
@@ -235,9 +234,23 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'POST', api.communication.email.endpoint, data, done );
   };
 
+  api.communication.email.send = {};
+
+  api.communication.email.send.demo = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/demo', data, done );
+  };
+
+  api.communication.email.send.passwordReset = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/passwordReset', data, done );
+  };
+
+  api.communication.email.send.verification = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/verification', data, done );
+  };
+
   api.communication.email.endpoint = api.communication.endpoint + '/email';
 
-  //TODO: ADD SEND ROUTES
+  api.communication.email.send.endpoint = api.communication.email.endpoint + '/send';
 
   api.communication.sms = function ( _id ) {
 
@@ -252,15 +265,65 @@ function APIClient( client_id, client_secret, opts ) {
     };
   };
 
-  api.communication.SMS.next = function ( done ) {
+  api.communication.sms.next = function ( done ) {
     api.request.authorized( 'GET', api.communication.sms.endpoint, null, done );
   };
 
-  api.communication.SMS.queue = function ( data, done ) {
+  api.communication.sms.queue = function ( data, done ) {
     api.request.authorized( 'POST', api.communication.sms.endpoint, data, done );
   };
 
-  //TODO: ADD SMS REGISTRATION ROUTES
+  api.communication.sms.phone = function(phone){
+
+    if ( !this || this.constructor !== api.communication.sms.phone ) {
+      return new api.communication.sms.phone( phone );
+    }
+
+    var resource = api.communication.sms.phone.endpoint + '/' + phone;
+
+    this.verify = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource, done ? data : {}, done || data );
+    };
+
+    this.addTwilio = function ( data, done ) {
+      api.request.authorized( 'PUT', resource, done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+  };
+
+  api.communication.sms.phone.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
+  };
+
+  api.communication.sms.phone.verify = function ( data, done ) {
+    api.request.authorized( 'PATCH', api.communication.sms.phone.endpoint+'/', data, done );
+  };
+
+  api.communication.sms.phone.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
+  };
+
+  api.communication.sms.phone.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
+  };
+
+  api.communication.sms.send = {};
+
+  api.communication.sms.send.message = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.send.endpoint, data, done );
+  };
+
+  api.communication.sms.send.verification = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.send.endpoint + '/verification', data, done );
+  };
+
+  api.communication.sms.phone.endpoint = api.communication.sms.endpoint + '/phone';
+
+  api.communication.sms.send.endpoint = api.communication.sms.endpoint + '/send';
 
   api.communication.sms.endpoint = api.communication.endpoint + '/sms';
 
@@ -842,9 +905,12 @@ function APIClient( client_id, client_secret, opts ) {
   };
 
   Object.freeze( this.callcenter );
-  Object.freeze( this.communication.sms );
+  Object.freeze( this.communication );
   Object.freeze( this.communication.email );
   Object.freeze( this.communication.email.send );
+  Object.freeze( this.communication.sms );
+  Object.freeze( this.communication.sms.phone );
+  Object.freeze( this.communication.sms.send );
   Object.freeze( this.directory.organization.service );
   Object.freeze( this.directory.organization.user );
   Object.freeze( this.directory.organization );
