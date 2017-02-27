@@ -143,7 +143,7 @@ function APIClient( client_id, client_secret, opts ) {
           cb( err, null );
         } );
 
-        console.log('here11');
+        console.log( 'here11' );
 
         done( null, es );
       }
@@ -207,6 +207,62 @@ function APIClient( client_id, client_secret, opts ) {
   api.setAuthTokens = function ( auth_tokens ) {
     tokens = auth_tokens || {};
   };
+
+  api.communication = {};
+
+  api.communication.endpoint = api.endpoint + '/communication';
+
+  api.communication.email = function ( _id ) {
+
+    if ( !this || this.constructor !== api.communication.email ) {
+      return new api.communication.email( _id );
+    }
+
+    var resource = api.communication.email.endpoint + '/' + _id;
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+  };
+
+
+  api.communication.email.next = function ( done ) {
+    api.request.authorized( 'GET', api.communication.email.endpoint, null, done );
+  };
+
+  api.communication.email.queue = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.email.endpoint, data, done );
+  };
+
+  api.communication.email.endpoint = api.communication.endpoint + '/email';
+
+  //TODO: ADD SEND ROUTES
+
+  api.communication.sms = function ( _id ) {
+
+    if ( !this || this.constructor !== api.communication.sms ) {
+      return new api.communication.sms( _id );
+    }
+
+    var resource = api.communication.sms.endpoint + '/' + _id;
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+  };
+
+  api.communication.SMS.next = function ( done ) {
+    api.request.authorized( 'GET', api.communication.sms.endpoint, null, done );
+  };
+
+  api.communication.SMS.queue = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.endpoint, data, done );
+  };
+
+  //TODO: ADD SMS REGISTRATION ROUTES
+
+  api.communication.sms.endpoint = api.communication.endpoint + '/sms';
 
   api.callcenter = {};
 
@@ -338,12 +394,12 @@ function APIClient( client_id, client_secret, opts ) {
 
     this.callback = {};
 
-    this.callback.register = function(data, done){
-      api.request.authorized( 'PATCH', resource+'/callback', done ? data : null, done || data );
+    this.callback.register = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource + '/callback', done ? data : null, done || data );
     };
 
-    this.callback.deregister = function(data, done){
-      api.request.authorized( 'DELETE', resource+'/callback', done ? data : null, done || data );
+    this.callback.deregister = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource + '/callback', done ? data : null, done || data );
     };
 
   };
@@ -785,10 +841,16 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'GET', api.storage.folder.endpoint, query, done );
   };
 
+  Object.freeze( this.callcenter );
+  Object.freeze( this.communication.sms );
+  Object.freeze( this.communication.email );
+  Object.freeze( this.communication.email.send );
   Object.freeze( this.directory.organization.service );
   Object.freeze( this.directory.organization.user );
   Object.freeze( this.directory.organization );
   Object.freeze( this.directory );
+  Object.freeze( this.emotion );
+  Object.freeze( this.language );
   Object.freeze( this.oauth2.credentials );
   Object.freeze( this.oauth2.token );
   Object.freeze( this.oauth2.twoFactor );
