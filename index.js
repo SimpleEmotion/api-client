@@ -321,11 +321,11 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'POST', api.communication.sms.send.endpoint + '/verification', data, done );
   };
 
+  api.communication.sms.endpoint = api.communication.endpoint + '/sms';
+
   api.communication.sms.phone.endpoint = api.communication.sms.endpoint + '/phone';
 
   api.communication.sms.send.endpoint = api.communication.sms.endpoint + '/send';
-
-  api.communication.sms.endpoint = api.communication.endpoint + '/sms';
 
   api.callcenter = {};
 
