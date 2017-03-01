@@ -143,8 +143,6 @@ function APIClient( client_id, client_secret, opts ) {
           cb( err, null );
         } );
 
-        console.log( 'here11' );
-
         done( null, es );
       }
       catch ( err ) {
