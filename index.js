@@ -263,8 +263,8 @@ function APIClient( client_id, client_secret, opts ) {
     };
   };
 
-  api.communication.sms.next = function ( done ) {
-    api.request.authorized( 'GET', api.communication.sms.endpoint, null, done );
+  api.communication.sms.next = function (data, done ) {
+    api.request.authorized( 'GET', api.communication.sms.endpoint, data, done );
   };
 
   api.communication.sms.queue = function ( data, done ) {
