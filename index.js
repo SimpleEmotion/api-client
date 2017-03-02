@@ -264,7 +264,11 @@ function APIClient( client_id, client_secret, opts ) {
     };
   };
 
-  api.communication.sms.next = function (data, done ) {
+  api.communication.sms.next = function ( data, done ) {
+    if ( !done ) {
+      done = data;
+      data = null;
+    }
     api.request.authorized( 'GET', api.communication.sms.endpoint, data, done );
   };
 
@@ -272,7 +276,7 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'POST', api.communication.sms.endpoint, data, done );
   };
 
-  api.communication.sms.phone = function(phone){
+  api.communication.sms.phone = function ( phone ) {
 
     if ( !this || this.constructor !== api.communication.sms.phone ) {
       return new api.communication.sms.phone( phone );
@@ -299,7 +303,7 @@ function APIClient( client_id, client_secret, opts ) {
   };
 
   api.communication.sms.phone.verify = function ( data, done ) {
-    api.request.authorized( 'PATCH', api.communication.sms.phone.endpoint+'/', data, done );
+    api.request.authorized( 'PATCH', api.communication.sms.phone.endpoint + '/', data, done );
   };
 
   api.communication.sms.phone.link = function ( data, done ) {
@@ -459,7 +463,7 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
     this.redirect_uri = {};
-    
+
     this.redirect_uri.add = function ( data, done ) {
       api.request.authorized( 'PUT', resource + '/redirect_uri', done ? data : null, done || data );
     };
