@@ -797,7 +797,7 @@ function APIClient( client_id, client_secret, opts ) {
       return new api.storage.model( _id );
     }
 
-    var resource = api.storage.features.endpoint + '/' + _id;
+    var resource = api.storage.model.endpoint + '/' + _id;
 
     this.get = function ( data, done ) {
       api.request.authorized( 'GET', resource, done ? data : {}, done || data );
@@ -824,11 +824,11 @@ function APIClient( client_id, client_secret, opts ) {
   api.storage.model.endpoint = api.storage.endpoint + '/model';
 
   api.storage.model.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.storage.features.endpoint, data, done );
+    api.request.authorized( 'POST', api.storage.model.endpoint, data, done );
   };
 
   api.storage.model.list = function ( data, done ) {
-    api.request.authorized( 'GET', api.storage.features.endpoint, done ? data : null, done || data );
+    api.request.authorized( 'GET', api.storage.model.endpoint, done ? data : null, done || data );
   };
 
 }
