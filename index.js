@@ -22,7 +22,7 @@ function APIClient( client_id, client_secret, opts ) {
   api.host = opts.host || 'https://api.simpleemotion.com';
   api.endpoint = opts.endpoint || '';
 
-  var scope = opts.scope || 'oauth2 directory';
+  var scope = opts.scope || '';
   var tokens = {};
 
   api.request = function ( opts, done ) {
@@ -912,31 +912,44 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'GET', api.storage.folder.endpoint, query, done );
   };
 
-  Object.freeze( this.callcenter );
-  Object.freeze( this.communication );
-  Object.freeze( this.communication.email );
-  Object.freeze( this.communication.email.send );
-  Object.freeze( this.communication.sms );
-  Object.freeze( this.communication.sms.phone );
-  Object.freeze( this.communication.sms.send );
-  Object.freeze( this.directory.organization.service );
-  Object.freeze( this.directory.organization.user );
-  Object.freeze( this.directory.organization );
-  Object.freeze( this.directory );
-  Object.freeze( this.emotion );
-  Object.freeze( this.language );
-  Object.freeze( this.oauth2.credentials );
-  Object.freeze( this.oauth2.token );
-  Object.freeze( this.oauth2.twoFactor );
-  Object.freeze( this.oauth2.user );
-  Object.freeze( this.operations );
-  Object.freeze( this.speaker );
-  Object.freeze( this.speech );
-  Object.freeze( this.storage.analysis );
-  Object.freeze( this.storage.audio );
-  Object.freeze( this.storage.features );
-  Object.freeze( this.storage.folder );
-  Object.freeze( this.storage );
-  Object.freeze( this );
+  api.storage.model = function ( _id ) {
+
+    if ( !this || this.constructor !== api.storage.model ) {
+      return new api.storage.model( _id );
+    }
+
+    var resource = api.storage.model.endpoint + '/' + _id;
+
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+    };
+
+    this.getDownloadUrl = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/download.url', done ? data : {}, done || data );
+    };
+
+    this.getUploadUrl = function ( data, done ) {
+      api.request.authorized( 'GET', resource + '/upload.url', done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+    this.rename = function ( data, done ) {
+      api.request.authorized( 'POST', resource + '/rename', done ? data : {}, done || data );
+    };
+
+  };
+
+  api.storage.model.endpoint = api.storage.endpoint + '/model';
+
+  api.storage.model.add = function ( data, done ) {
+    api.request.authorized( 'POST', api.storage.model.endpoint, data, done );
+  };
+
+  api.storage.model.list = function ( data, done ) {
+    api.request.authorized( 'GET', api.storage.model.endpoint, done ? data : null, done || data );
+  };
 
 }
