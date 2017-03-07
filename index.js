@@ -608,6 +608,28 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'DELETE', resource, { _id: _id }, done );
     };
 
+    this.email = {
+
+      link: function ( data, done ) {
+        if ( !done ) {
+          done = data;
+          data = {};
+        }
+
+        api.request.authorized( 'POST', resource + '/verify/' + data.code, data, done );
+      },
+
+      verify: function ( data, done ) {
+        if ( !done ) {
+          done = data;
+          data = {};
+        }
+
+        api.request.authorized( 'PATCH', resource + '/verify/' + data.code, data, done );
+      }
+
+    };
+
     this.twoFactor = {
 
       disable: function ( otp, done ) {
@@ -660,6 +682,16 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.oauth2.user.removeAll = function ( done ) {
     api.request.authorized( 'DELETE', api.oauth2.user.endpoint, null, done );
+  };
+
+  api.oauth2.user.password = {};
+
+  api.oauth2.user.password.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/password-reset/' + data.code, data, done );
+  };
+
+  api.oauth2.user.password.reset = function ( data, done ) {
+    api.request.authorized( 'PATCH', api.oauth2.user.endpoint + '/password-reset/' + data.code, data, done );
   };
 
   api.operations = {};
