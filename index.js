@@ -615,8 +615,16 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.speaker.endpoint = api.endpoint + '/speaker';
 
-  api.speaker.diarize = function ( audio_id, done ) {
-    api.request.authorized( 'POST', api.speaker.endpoint + '/diarize/' + audio_id, null, done );
+  api.speaker.diarize = {};
+
+  api.speaker.diarize.endpoint = api.speaker.endpoint + '/diarize';
+
+  api.speaker.diarize.words = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.speaker.diarize.endpoint + '/diarize/words/' + audio_id, null, done );
+  };
+
+  api.speaker.diarize.voice = function ( audio_id, done ) {
+    api.request.authorized( 'POST', api.speaker.diarize.endpoint + '/diarize/voice/' + audio_id, null, done );
   };
 
   api.speech = {};
