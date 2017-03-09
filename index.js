@@ -144,8 +144,6 @@ function APIClient( client_id, client_secret, opts ) {
           cb( err, null );
         } );
 
-        console.log( 'here11' );
-
         done( null, es );
       }
       catch ( err ) {
@@ -208,6 +206,129 @@ function APIClient( client_id, client_secret, opts ) {
   api.setAuthTokens = function ( auth_tokens ) {
     tokens = auth_tokens || {};
   };
+
+  api.communication = {};
+
+  api.communication.endpoint = api.endpoint + '/communication';
+
+  api.communication.email = function ( _id ) {
+
+    if ( !this || this.constructor !== api.communication.email ) {
+      return new api.communication.email( _id );
+    }
+
+    var resource = api.communication.email.endpoint + '/' + _id;
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+  };
+
+  api.communication.email.next = function ( done ) {
+    api.request.authorized( 'GET', api.communication.email.endpoint, null, done );
+  };
+
+  api.communication.email.queue = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.email.endpoint, data, done );
+  };
+
+  api.communication.email.send = {};
+
+  api.communication.email.send.demo = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/demo', data, done );
+  };
+
+  api.communication.email.send.passwordReset = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/passwordReset', data, done );
+  };
+
+  api.communication.email.send.verification = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/verification', data, done );
+  };
+
+  api.communication.email.endpoint = api.communication.endpoint + '/email';
+
+  api.communication.email.send.endpoint = api.communication.email.endpoint + '/send';
+
+  api.communication.sms = function ( _id ) {
+
+    if ( !this || this.constructor !== api.communication.sms ) {
+      return new api.communication.sms( _id );
+    }
+
+    var resource = api.communication.sms.endpoint + '/' + _id;
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+  };
+
+  api.communication.sms.next = function ( data, done ) {
+    if ( !done ) {
+      done = data;
+      data = null;
+    }
+    api.request.authorized( 'GET', api.communication.sms.endpoint, data, done );
+  };
+
+  api.communication.sms.queue = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.endpoint, data, done );
+  };
+
+  api.communication.sms.phone = function ( phone ) {
+
+    if ( !this || this.constructor !== api.communication.sms.phone ) {
+      return new api.communication.sms.phone( phone );
+    }
+
+    var resource = api.communication.sms.phone.endpoint + '/' + phone;
+
+    this.verify = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource, done ? data : {}, done || data );
+    };
+
+    this.addTwilio = function ( data, done ) {
+      api.request.authorized( 'PUT', resource, done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+  };
+
+  api.communication.sms.phone.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
+  };
+
+  api.communication.sms.phone.verify = function ( data, done ) {
+    api.request.authorized( 'PATCH', api.communication.sms.phone.endpoint + '/', data, done );
+  };
+
+  api.communication.sms.phone.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
+  };
+
+  api.communication.sms.phone.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
+  };
+
+  api.communication.sms.send = {};
+
+  api.communication.sms.send.message = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.send.endpoint, data, done );
+  };
+
+  api.communication.sms.send.verification = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.sms.send.endpoint + '/verification', data, done );
+  };
+
+  api.communication.sms.endpoint = api.communication.endpoint + '/sms';
+
+  api.communication.sms.phone.endpoint = api.communication.sms.endpoint + '/phone';
+
+  api.communication.sms.send.endpoint = api.communication.sms.endpoint + '/send';
 
   api.callcenter = {};
 
@@ -487,6 +608,28 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'DELETE', resource, { _id: _id }, done );
     };
 
+    this.email = {
+
+      link: function ( data, done ) {
+        if ( !done ) {
+          done = data;
+          data = {};
+        }
+
+        api.request.authorized( 'POST', resource + '/verify/' + data.code, data, done );
+      },
+
+      verify: function ( data, done ) {
+        if ( !done ) {
+          done = data;
+          data = {};
+        }
+
+        api.request.authorized( 'PATCH', resource + '/verify/' + data.code, data, done );
+      }
+
+    };
+
     this.twoFactor = {
 
       disable: function ( otp, done ) {
@@ -539,6 +682,16 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.oauth2.user.removeAll = function ( done ) {
     api.request.authorized( 'DELETE', api.oauth2.user.endpoint, null, done );
+  };
+
+  api.oauth2.user.password = {};
+
+  api.oauth2.user.password.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/password-reset/' + data.code, data, done );
+  };
+
+  api.oauth2.user.password.reset = function ( data, done ) {
+    api.request.authorized( 'PATCH', api.oauth2.user.endpoint + '/password-reset/' + data.code, data, done );
   };
 
   api.operations = {};
