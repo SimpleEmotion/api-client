@@ -233,23 +233,7 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'POST', api.communication.email.endpoint, data, done );
   };
 
-  api.communication.email.send = {};
-
-  api.communication.email.send.demo = function ( data, done ) {
-    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/demo', data, done );
-  };
-
-  api.communication.email.send.passwordReset = function ( data, done ) {
-    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/passwordReset', data, done );
-  };
-
-  api.communication.email.send.verification = function ( data, done ) {
-    api.request.authorized( 'POST', api.communication.email.send.endpoint + '/verification', data, done );
-  };
-
   api.communication.email.endpoint = api.communication.endpoint + '/email';
-
-  api.communication.email.send.endpoint = api.communication.email.endpoint + '/send';
 
   api.communication.sms = function ( _id ) {
 
@@ -616,7 +600,7 @@ function APIClient( client_id, client_secret, opts ) {
           data = {};
         }
 
-        api.request.authorized( 'POST', resource + '/verify/' + data.code, data, done );
+        api.request.authorized( 'POST', resource + '/verify', data, done );
       },
 
       verify: function ( data, done ) {
@@ -687,7 +671,7 @@ function APIClient( client_id, client_secret, opts ) {
   api.oauth2.user.password = {};
 
   api.oauth2.user.password.link = function ( data, done ) {
-    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/password-reset/' + data.code, data, done );
+    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/password-reset' , data, done );
   };
 
   api.oauth2.user.password.reset = function ( data, done ) {
