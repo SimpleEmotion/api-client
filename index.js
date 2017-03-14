@@ -286,18 +286,6 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
   };
 
-  api.communication.sms.phone.verify = function ( data, done ) {
-    api.request.authorized( 'PATCH', api.communication.sms.phone.endpoint + '/', data, done );
-  };
-
-  api.communication.sms.phone.link = function ( data, done ) {
-    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
-  };
-
-  api.communication.sms.phone.link = function ( data, done ) {
-    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
-  };
-
   api.communication.sms.send = {};
 
   api.communication.sms.send.message = function ( data, done ) {
