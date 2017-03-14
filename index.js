@@ -272,6 +272,10 @@ function APIClient( client_id, client_secret, opts ) {
       api.request.authorized( 'PATCH', resource, done ? data : {}, done || data );
     };
 
+    this.get = function ( data, done ) {
+      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+    };
+
     this.addTwilio = function ( data, done ) {
       api.request.authorized( 'PUT', resource, done ? data : {}, done || data );
     };
