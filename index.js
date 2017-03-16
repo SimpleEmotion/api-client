@@ -260,36 +260,6 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'POST', api.communication.sms.endpoint, data, done );
   };
 
-  api.communication.sms.phone = function ( phone ) {
-
-    if ( !this || this.constructor !== api.communication.sms.phone ) {
-      return new api.communication.sms.phone( phone );
-    }
-
-    var resource = api.communication.sms.phone.endpoint + '/' + phone;
-
-    this.verify = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource, done ? data : {}, done || data );
-    };
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
-    };
-
-    this.addTwilio = function ( data, done ) {
-      api.request.authorized( 'PUT', resource, done ? data : {}, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
-    };
-
-  };
-
-  api.communication.sms.phone.link = function ( data, done ) {
-    api.request.authorized( 'POST', api.communication.sms.phone.endpoint, data, done );
-  };
-
   api.communication.sms.send = {};
 
   api.communication.sms.send.message = function ( data, done ) {
@@ -302,9 +272,39 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.communication.sms.endpoint = api.communication.endpoint + '/sms';
 
-  api.communication.sms.phone.endpoint = api.communication.sms.endpoint + '/phone';
-
   api.communication.sms.send.endpoint = api.communication.sms.endpoint + '/send';
+
+  api.communication.phone = function ( phone ) {
+
+    if ( !this || this.constructor !== api.communication.phone ) {
+      return new api.communication.phone( phone );
+    }
+
+    var resource = api.communication.phone.endpoint + '/' + phone;
+
+    this.verify = function ( data, done ) {
+      api.request.authorized( 'PATCH', resource, done ? data : {}, done || data );
+    };
+
+    this.addTwilio = function ( data, done ) {
+      api.request.authorized( 'PUT', resource, done ? data : {}, done || data );
+    };
+
+    this.remove = function ( data, done ) {
+      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+    };
+
+  };
+
+  api.communication.phone.link = function ( data, done ) {
+    api.request.authorized( 'POST', api.communication.phone.endpoint, data, done );
+  };
+
+  api.communication.phone.get = function ( data, done ) {
+    api.request.authorized( 'GET', api.communication.phone.endpoint, data, done );
+  };
+
+  api.communication.phone.endpoint = api.communication.endpoint + '/phone';
 
   api.callcenter = {};
 
@@ -663,7 +663,7 @@ function APIClient( client_id, client_secret, opts ) {
   api.oauth2.user.password = {};
 
   api.oauth2.user.password.link = function ( data, done ) {
-    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/password-reset' , data, done );
+    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/password-reset', data, done );
   };
 
   api.oauth2.user.password.reset = function ( data, done ) {
