@@ -837,7 +837,7 @@ function APIClient( client_id, client_secret, opts ) {
     };
 
     this.uploadFromUrl = function ( data, done ) {
-      api.request.authorized( 'POST', resource, done ? data : null, done || data );
+      api.request.authorized( 'POST', resource + '/uploadFromUrl', done ? data : null, done || data );
     };
 
   };
