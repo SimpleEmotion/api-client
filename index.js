@@ -220,7 +220,7 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.communication.email.endpoint + '/' + _id;
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
   };
@@ -244,7 +244,7 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.communication.sms.endpoint + '/' + _id;
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
   };
 
@@ -283,15 +283,15 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.communication.phone.endpoint + '/' + phone;
 
     this.verify = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource, done ? data : {}, done || data );
+      api.request.authorized( 'PATCH', resource, done ? data : null, done || data );
     };
 
     this.addTwilio = function ( data, done ) {
-      api.request.authorized( 'PUT', resource, done ? data : {}, done || data );
+      api.request.authorized( 'PUT', resource, done ? data : null, done || data );
     };
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
   };
@@ -331,15 +331,15 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.directory.organization.endpoint + '/' + _id;
 
     this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource, done ? data : null, done || data );
     };
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
     this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', done ? data : {}, done || data );
+      api.request.authorized( 'POST', resource + '/rename', done ? data : null, done || data );
     };
 
     this.service = {
@@ -785,15 +785,15 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.storage.analysis.endpoint + '/' + _id;
 
     this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource, done ? data : null, done || data );
     };
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
     this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', done ? data : {}, done || data );
+      api.request.authorized( 'POST', resource + '/rename', done ? data : null, done || data );
     };
 
   };
@@ -817,27 +817,27 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.storage.audio.endpoint + '/' + _id;
 
     this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource, done ? data : null, done || data );
     };
 
     this.getDownloadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/download.url', done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource + '/download.url', done ? data : null, done || data );
     };
 
     this.getUploadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/upload.url', done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource + '/upload.url', done ? data : null, done || data );
     };
 
     this.move = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/move', done ? data : {}, done || data );
+      api.request.authorized( 'POST', resource + '/move', done ? data : null, done || data );
     };
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
-    this.upload = function ( fd, done ) {
-      api.request.stream( 'PUT', resource, fd, done );
+    this.uploadFromUrl = function ( data, done ) {
+      api.request.authorized( 'POST', resource, done ? data : null, done || data );
     };
 
   };
@@ -861,23 +861,23 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.storage.features.endpoint + '/' + _id;
 
     this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource, done ? data : null, done || data );
     };
 
     this.getDownloadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/download.url', done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource + '/download.url', done ? data : null, done || data );
     };
 
     this.getUploadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/upload.url', done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource + '/upload.url', done ? data : null, done || data );
     };
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
     this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', done ? data : {}, done || data );
+      api.request.authorized( 'POST', resource + '/rename', done ? data : null, done || data );
     };
 
   };
@@ -901,23 +901,23 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.storage.folder.endpoint + '/' + _id;
 
     this.audio = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/audio', done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource + '/audio', done ? data : null, done || data );
     };
 
     this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource, done ? data : null, done || data );
     };
 
     this.move = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/move', done ? data : {}, done || data );
+      api.request.authorized( 'PATCH', resource + '/move', done ? data : null, done || data );
     };
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
     this.rename = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/rename', done ? data : {}, done || data );
+      api.request.authorized( 'PATCH', resource + '/rename', done ? data : null, done || data );
     };
 
   };
@@ -941,23 +941,23 @@ function APIClient( client_id, client_secret, opts ) {
     var resource = api.storage.model.endpoint + '/' + _id;
 
     this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource, done ? data : null, done || data );
     };
 
     this.getDownloadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/download.url', done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource + '/download.url', done ? data : null, done || data );
     };
 
     this.getUploadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/upload.url', done ? data : {}, done || data );
+      api.request.authorized( 'GET', resource + '/upload.url', done ? data : null, done || data );
     };
 
     this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : {}, done || data );
+      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
     };
 
     this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', done ? data : {}, done || data );
+      api.request.authorized( 'POST', resource + '/rename', done ? data : null, done || data );
     };
 
   };
