@@ -764,12 +764,12 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.speech.endpoint = api.endpoint + '/speech';
 
-  api.speech.detect = function ( audio_id, done ) {
-    api.request.authorized( 'POST', api.speech.endpoint + '/detect/' + audio_id, null, done );
+  api.speech.detect = function ( data, done ) {
+    api.request.authorized( 'POST', api.speech.endpoint + '/detect', done ? data : null, done || data );
   };
 
-  api.speech.transcribe = function ( audio_id, done ) {
-    api.request.authorized( 'POST', api.speech.endpoint + '/transcribe/' + audio_id, null, done );
+  api.speech.transcribe = function ( data, done ) {
+    api.request.authorized( 'POST', api.speech.endpoint + '/transcribe', done ? data : null, done || data );
   };
 
   api.storage = {};
