@@ -852,6 +852,10 @@ function APIClient( client_id, client_secret, opts ) {
     api.request.authorized( 'GET', api.storage.audio.endpoint, query, done );
   };
 
+  api.storage.audio.process = function ( data, done ) {
+    api.request.authorized( 'POST', api.storage.audio.endpoint + '/process', done ? data : null, done || data );
+  };
+
   api.storage.features = function ( _id ) {
 
     if ( !this || this.constructor !== api.storage.features ) {
