@@ -19,6 +19,7 @@ function APIClient( client_id, client_secret, opts ) {
   };
 
   opts = opts || {};
+  api.protocol = opts.protocol || 'https';
   api.host = opts.host || 'https://api.simpleemotion.com';
   api.endpoint = opts.endpoint || '';
 
@@ -207,6 +208,14 @@ function APIClient( client_id, client_secret, opts ) {
     tokens = auth_tokens || {};
   };
 
+  api.callcenter = {};
+
+  generate(
+    api.callcenter,
+    api.endpoint + '/callcenter',
+    [ 'analyze', 'detectEvents' ]
+  );
+
   api.communication = {};
 
   api.communication.endpoint = api.endpoint + '/communication';
@@ -306,18 +315,6 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.communication.phone.endpoint = api.communication.endpoint + '/phone';
 
-  api.callcenter = {};
-
-  api.callcenter.endpoint = api.endpoint + '/callcenter';
-
-  api.callcenter.analyze = function ( audio_id, done ) {
-    api.request.authorized( 'POST', api.callcenter.endpoint + '/analyze/' + audio_id, null, done );
-  };
-
-  api.callcenter.detectEvents = function ( audio_id, done ) {
-    api.request.authorized( 'POST', api.callcenter.endpoint + '/detectEvents/' + audio_id, null, done );
-  };
-
   api.directory = {};
 
   api.directory.endpoint = api.endpoint + '/directory';
@@ -400,23 +397,19 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.emotion = {};
 
-  api.emotion.endpoint = api.endpoint + '/emotion';
-
-  api.emotion.classify = function ( audio_id, done ) {
-    api.request.authorized( 'POST', api.emotion.endpoint + '/classify/' + audio_id, null, done );
-  };
+  generate(
+    api.emotion,
+    api.endpoint + '/emotion',
+    [ 'classify' ]
+  );
 
   api.language = {};
 
-  api.language.endpoint = api.endpoint + '/language';
-
-  api.language.analyzeTranscript = function ( audio_id, done ) {
-    api.request.authorized( 'POST', api.language.endpoint + '/analyzeTranscript/' + audio_id, null, done );
-  };
-
-  api.language.extractProblemSummary = function ( audio_id, done ) {
-    api.request.authorized( 'POST', api.language.endpoint + '/extractProblemSummary/' + audio_id, null, done );
-  };
+  generate(
+    api.language,
+    api.endpoint + '/language',
+    [ 'analyzeTranscript', 'extractProblemSummary' ]
+  );
 
   api.oauth2 = {};
 
@@ -672,308 +665,80 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.operations = {};
 
-  api.operations = function ( _id ) {
+  generate(
+    api.operations,
+    api.endpoint + '/operations',
+    [ 'add', 'get', 'list', 'next', 'remove', 'update' ]
+  );
 
-    if ( !this || this.constructor !== api.operations ) {
-      return new api.operations( _id );
-    }
-
-    var resource = api.operations.endpoint + '/' + _id;
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : null, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
-    };
-
-    this.update = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource, done ? data : null, done || data );
-    };
-
-    this.onComplete = function ( poll_rate, done ) {
-
-      if ( !done ) {
-        done = poll_rate;
-        poll_rate = 1000;
-      }
-
-      this.get( function ( err, result ) {
-
-        if ( err ) {
-          return done( err, null );
-        }
-
-        // Check if operation has completed
-        if ( result.operation.states.completed ) {
-          return done( null, result );
-        }
-
-        // Poll
-        setTimeout( this.onComplete.bind( this, poll_rate, done ), poll_rate );
-
-      }.bind( this ) );
-
-    };
-
-    this.listen = function ( action, entity, entity_id, cb, done ) {
-      var uri = resource + '?stream=notify' + ( action ? '&action=' + action.toString() : '' ) +
-                ( entity ? '&entity=' + entity.toString() : '' ) +
-                ( entity_id ? '&entity_id=' + entity_id.toString() : '' );
-      api.request.listen( uri, cb, done );
-    };
-
+  api.speaker = {
+    diarize: {}
   };
 
-  api.operations.endpoint = api.endpoint + '/operations';
+  generate(
+    api.speaker.diarize,
+    api.endpoint + '/speaker/diarize',
+    [ 'voice', 'words' ]
+  );
 
-  api.operations.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.operations.endpoint, data, done );
-  };
-
-  api.operations.list = function ( data, done ) {
-    api.request.authorized( 'GET', api.operations.endpoint, done ? data : null, done || data );
-  };
-
-  api.operations.next = function ( data, done ) {
-    api.request.authorized( 'GET', api.operations.endpoint + '/next', data, done );
-  };
-
-  api.speaker = {};
-
-  api.speaker.endpoint = api.endpoint + '/speaker';
-
-  api.speaker.diarize = {};
-
-  api.speaker.diarize.endpoint = api.speaker.endpoint + '/diarize';
-
-  api.speaker.diarize.voice = function ( data, done ) {
-    api.request.authorized( 'POST', api.speaker.diarize.endpoint + '/voice', done ? data : null, done || data );
-  };
-
-  api.speaker.diarize.words = function ( data, done ) {
-    api.request.authorized( 'POST', api.speaker.diarize.endpoint + '/words', done ? data : null, done || data );
-  };
-
-  api.speaker.train = function ( data, done ) {
-    api.request.authorized( 'POST', api.speaker.endpoint + '/train', done ? data : null, done || data );
-  };
+  generate(
+    api.speaker,
+    api.endpoint + '/speaker',
+    [ 'train' ]
+  );
 
   api.speech = {};
 
-  api.speech.endpoint = api.endpoint + '/speech';
+  generate(
+    api.speech,
+    api.endpoint + '/speech',
+    [ 'detect', 'transcribe' ]
+  );
 
-  api.speech.detect = function ( data, done ) {
-    api.request.authorized( 'POST', api.speech.endpoint + '/detect', done ? data : null, done || data );
+  api.storage = {
+    analysis: {},
+    audio: {},
+    features: {},
+    folder: {},
+    model: {}
   };
 
-  api.speech.transcribe = function ( data, done ) {
-    api.request.authorized( 'POST', api.speech.endpoint + '/transcribe', done ? data : null, done || data );
-  };
+  generate(
+    api.storage.analysis,
+    api.endpoint + '/storage/analysis',
+    [ 'add', 'exists', 'get', 'list', 'remove', 'rename' ]
+  );
 
-  api.storage = {};
+  generate(
+    api.storage.audio,
+    api.endpoint + '/storage/audio',
+    [ 'add', 'exists', 'get', 'getDownloadUrl', 'getUploadUrl', 'list', 'move', 'process', 'remove', 'uploadFromUrl' ]
+  );
 
-  api.storage.endpoint = api.endpoint + '/storage';
+  generate(
+    api.storage.features,
+    api.endpoint + '/storage/features',
+    [ 'add', 'exists', 'get', 'list', 'getDownloadUrl', 'getUploadUrl', 'remove', 'rename' ]
+  );
 
-  api.storage.analysis = function ( _id ) {
+  generate(
+    api.storage.folder,
+    api.endpoint + '/storage/folder',
+    [ 'add', 'exists', 'get', 'list' ]
+  );
 
-    if ( !this || this.constructor !== api.storage.analysis ) {
-      return new api.storage.analysis( _id );
-    }
+  generate(
+    api.storage.model,
+    api.endpoint + '/storage/model',
+    [ 'add', 'exists', 'get', 'getDownloadUrl', 'getUploadUrl', 'list', 'remove', 'rename' ]
+  );
 
-    var resource = api.storage.analysis.endpoint + '/' + _id;
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : null, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
-    };
-
-    this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', done ? data : null, done || data );
-    };
-
-  };
-
-  api.storage.analysis.endpoint = api.storage.endpoint + '/analysis';
-
-  api.storage.analysis.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.storage.analysis.endpoint, data, done );
-  };
-
-  api.storage.analysis.list = function ( query, done ) {
-    api.request.authorized( 'GET', api.storage.analysis.endpoint, query, done );
-  };
-
-  api.storage.audio = function ( _id ) {
-
-    if ( !this || this.constructor !== api.storage.audio ) {
-      return new api.storage.audio( _id );
-    }
-
-    var resource = api.storage.audio.endpoint + '/' + _id;
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : null, done || data );
-    };
-
-    this.getDownloadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/download.url', done ? data : null, done || data );
-    };
-
-    this.getUploadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/upload.url', done ? data : null, done || data );
-    };
-
-    this.move = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/move', done ? data : null, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
-    };
-
-    this.uploadFromUrl = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/uploadFromUrl', done ? data : null, done || data );
-    };
-
-  };
-
-  api.storage.audio.endpoint = api.storage.endpoint + '/audio';
-
-  api.storage.audio.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.storage.audio.endpoint, data, done );
-  };
-
-  api.storage.audio.list = function ( query, done ) {
-    api.request.authorized( 'GET', api.storage.audio.endpoint, query, done );
-  };
-
-  api.storage.audio.process = function ( data, done ) {
-    api.request.authorized( 'POST', api.storage.audio.endpoint + '/process', done ? data : null, done || data );
-  };
-
-  api.storage.features = function ( _id ) {
-
-    if ( !this || this.constructor !== api.storage.features ) {
-      return new api.storage.features( _id );
-    }
-
-    var resource = api.storage.features.endpoint + '/' + _id;
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : null, done || data );
-    };
-
-    this.getDownloadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/download.url', done ? data : null, done || data );
-    };
-
-    this.getUploadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/upload.url', done ? data : null, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
-    };
-
-    this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', done ? data : null, done || data );
-    };
-
-  };
-
-  api.storage.features.endpoint = api.storage.endpoint + '/features';
-
-  api.storage.features.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.storage.features.endpoint, data, done );
-  };
-
-  api.storage.features.list = function ( query, done ) {
-    api.request.authorized( 'GET', api.storage.features.endpoint, query, done );
-  };
-
-  api.storage.folder = function ( _id ) {
-
-    if ( !this || this.constructor !== api.storage.folder ) {
-      return new api.storage.folder( _id );
-    }
-
-    var resource = api.storage.folder.endpoint + '/' + _id;
-
-    this.audio = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/audio', done ? data : null, done || data );
-    };
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : null, done || data );
-    };
-
-    this.move = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/move', done ? data : null, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
-    };
-
-    this.rename = function ( data, done ) {
-      api.request.authorized( 'PATCH', resource + '/rename', done ? data : null, done || data );
-    };
-
-  };
-
-  api.storage.folder.endpoint = api.storage.endpoint + '/folder';
-
-  api.storage.folder.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.storage.folder.endpoint, data, done );
-  };
-
-  api.storage.folder.list = function ( query, done ) {
-    api.request.authorized( 'GET', api.storage.folder.endpoint, query, done );
-  };
-
-  api.storage.model = function ( _id ) {
-
-    if ( !this || this.constructor !== api.storage.model ) {
-      return new api.storage.model( _id );
-    }
-
-    var resource = api.storage.model.endpoint + '/' + _id;
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : null, done || data );
-    };
-
-    this.getDownloadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/download.url', done ? data : null, done || data );
-    };
-
-    this.getUploadUrl = function ( data, done ) {
-      api.request.authorized( 'GET', resource + '/upload.url', done ? data : null, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
-    };
-
-    this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', done ? data : null, done || data );
-    };
-
-  };
-
-  api.storage.model.endpoint = api.storage.endpoint + '/model';
-
-  api.storage.model.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.storage.model.endpoint, data, done );
-  };
-
-  api.storage.model.list = function ( data, done ) {
-    api.request.authorized( 'GET', api.storage.model.endpoint, done ? data : null, done || data );
-  };
+  function generate( path, endpoint, methods ) {
+    methods.forEach( function ( method ) {
+      path[ method ] = function ( data, done ) {
+        api.request.authorized( 'POST', endpoint + '/' + method, data, done );
+      };
+    } );
+  }
 
 }
