@@ -315,85 +315,38 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.communication.phone.endpoint = api.communication.endpoint + '/phone';
 
-  api.directory = {};
-
-  api.directory.endpoint = api.endpoint + '/directory';
-
-  api.directory.organization = function ( _id ) {
-
-    if ( !this || this.constructor !== api.directory.organization ) {
-      return new api.directory.organization( _id );
+  api.directory = {
+    organization: {
+      service: {},
+      user: {
+        invitation: {}
+      }
     }
-
-    var resource = api.directory.organization.endpoint + '/' + _id;
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : null, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
-    };
-
-    this.rename = function ( data, done ) {
-      api.request.authorized( 'POST', resource + '/rename', done ? data : null, done || data );
-    };
-
-    this.service = {
-
-      endpoint: resource + '/service',
-
-      add: function ( service_id, done ) {
-        api.request.authorized( 'POST', this.service.endpoint + '/' + service_id, null, done );
-      }.bind( this ),
-
-      remove: function ( service_id, done ) {
-        api.request.authorized( 'DELETE', this.service.endpoint + '/' + service_id, null, done );
-      }.bind( this )
-
-    };
-
-    this.user = {
-
-      endpoint: resource + '/user',
-
-      add: function ( user_id, done ) {
-        api.request.authorized( 'POST', this.user.endpoint + '/' + user_id, null, done );
-      }.bind( this ),
-
-      invitation: {
-
-        add: function ( email, done ) {
-          api.request.authorized( 'POST', this.user.endpoint + '/invitation/' + email, null, done );
-        }.bind( this ),
-
-        remove: function ( email, done ) {
-          api.request.authorized( 'DELETE', this.user.endpoint + '/invitation/' + email, null, done );
-        }.bind( this )
-
-      },
-
-      list: function ( data, done ) {
-        api.request.authorized( 'GET', this.user.endpoint, data, done );
-      }.bind( this ),
-
-      remove: function ( user_id, done ) {
-        api.request.authorized( 'DELETE', this.user.endpoint + '/' + user_id, null, done );
-      }.bind( this )
-
-    };
-
   };
 
-  api.directory.organization.endpoint = api.directory.endpoint + '/organization';
+  generate(
+    api.directory.organization,
+    api.endpoint + '/directory/organization',
+    [ 'add', 'get', 'list', 'remove', 'rename' ]
+  );
 
-  api.directory.organization.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.directory.organization.endpoint + '/' + data._id, data, done );
-  };
+  generate(
+    api.directory.organization.service,
+    api.endpoint + '/directory/organization/service',
+    [ 'add', 'remove' ]
+  );
 
-  api.directory.organization.list = function ( data, done ) {
-    api.request.authorized( 'GET', api.directory.organization.endpoint, data, done );
-  };
+  generate(
+    api.directory.organization.user,
+    api.endpoint + '/directory/organization/user',
+    [ 'add', 'list', 'remove' ]
+  );
+
+  generate(
+    api.directory.organization.user.invitation,
+    api.endpoint + '/directory/organization/user/invitation',
+    [ 'add', 'remove' ]
+  );
 
   api.emotion = {};
 
