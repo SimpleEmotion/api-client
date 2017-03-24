@@ -327,7 +327,7 @@ function APIClient( client_id, client_secret, opts ) {
   generate(
     api.directory.organization,
     api.endpoint + '/directory/organization',
-    [ 'add', 'get', 'list', 'remove', 'rename' ]
+    [ 'add', 'exists', 'get', 'list', 'remove', 'rename' ]
   );
 
   generate(
