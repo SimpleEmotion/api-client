@@ -671,6 +671,22 @@ function APIClient( client_id, client_secret, opts ) {
     [ 'add', 'get', 'list', 'next', 'remove', 'update' ]
   );
 
+  api.operations.onComplete = function ( data, done ) {
+    api.operations.get( data, function ( err, result ) {
+
+      if ( err ) {
+        return done( err, null );
+      }
+
+      if ( !result.operation.states.completed ) {
+        return setTimeout( api.operations.onComplete.bind( null, data, done ), 1000 );
+      }
+
+      done( null, result );
+
+    } );
+  };
+
   api.speaker = {
     diarize: {}
   };
