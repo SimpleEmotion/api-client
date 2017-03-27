@@ -364,94 +364,16 @@ function APIClient( client_id, client_secret, opts ) {
     [ 'analyzeTranscript', 'extractProblemSummary' ]
   );
 
-  api.oauth2 = {};
+  api.oauth2 = {
+    credentials: {
+      redirect_uri: {}
+    },
+    user: {
+      twoFactor: {}
+    }
+  };
 
   api.oauth2.endpoint = api.endpoint + '/oauth2';
-
-  api.oauth2.credentials = function Credentials( client_id ) {
-
-    if ( !this || this.constructor !== Credentials ) {
-      return new Credentials( client_id );
-    }
-
-    var resource = api.oauth2.credentials.endpoint + '/' + client_id;
-
-    this.get = function ( data, done ) {
-      api.request.authorized( 'GET', resource, done ? data : null, done || data );
-    };
-
-    this.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource, done ? data : null, done || data );
-    };
-
-    this.redirect_uri = {};
-
-    this.redirect_uri.add = function ( data, done ) {
-      api.request.authorized( 'PUT', resource + '/redirect_uri', done ? data : null, done || data );
-    };
-
-    this.redirect_uri.remove = function ( data, done ) {
-      api.request.authorized( 'DELETE', resource + '/redirect_uri', done ? data : null, done || data );
-    };
-
-  };
-
-  api.oauth2.credentials.endpoint = api.oauth2.endpoint + '/credentials';
-
-  api.oauth2.credentials.generate = function ( name, role, done ) {
-
-    if ( !done ) {
-      done = role;
-      role = {};
-    }
-
-    api.request.authorized(
-      'POST',
-      api.oauth2.credentials.endpoint,
-      {
-        name: name,
-        role: role
-      },
-      function ( err, result ) {
-
-        if ( err ) {
-          return done( err, null, null );
-        }
-
-        done( err, result );
-
-      }
-    );
-
-  };
-
-  api.oauth2.credentials.removeAll = function ( query, done ) {
-
-    if ( !done ) {
-      done = query;
-      query = {};
-    }
-
-    api.request.authorized(
-      'DELETE',
-      api.oauth2.credentials.endpoint,
-      query,
-      function ( err, result ) {
-
-        if ( err ) {
-          return done( err, null, null );
-        }
-
-        done( err, result );
-
-      }
-    );
-
-  };
-
-  api.oauth2.credentials.list = function ( data, done ) {
-    api.request.authorized( 'GET', api.oauth2.credentials.endpoint, done ? data : null, done || data );
-  };
 
   api.oauth2.token = function Token( token ) {
 
@@ -514,107 +436,29 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-  api.oauth2.user = function User( _id ) {
+  generate(
+    api.oauth2.credentials,
+    api.endpoint + '/oauth2/credentials',
+    [ 'generate', 'get', 'list', 'remove' ]
+  );
 
-    if ( !this || this.constructor !== User ) {
-      return new User( _id );
-    }
+  generate(
+    api.oauth2.credentials.redirect_uri,
+    api.endpoint + '/oauth2/credentials/redirect_uri',
+    [ 'add', 'remove' ]
+  );
 
-    var resource = api.oauth2.user.endpoint + '/' + _id;
+  generate(
+    api.oauth2.user,
+    api.endpoint + '/oauth2/user',
+    [ 'add', 'get', 'list', 'register', 'remove' ]
+  );
 
-    this.get = function ( done ) {
-      api.request.authorized( 'GET', resource, { _id: _id }, done );
-    };
-
-    this.remove = function ( done ) {
-      api.request.authorized( 'DELETE', resource, { _id: _id }, done );
-    };
-
-    this.email = {
-
-      link: function ( data, done ) {
-        if ( !done ) {
-          done = data;
-          data = {};
-        }
-
-        api.request.authorized( 'POST', resource + '/verify', data, done );
-      },
-
-      verify: function ( data, done ) {
-        if ( !done ) {
-          done = data;
-          data = {};
-        }
-
-        api.request.authorized( 'PATCH', resource + '/verify/' + data.code, data, done );
-      }
-
-    };
-
-    this.twoFactor = {
-
-      disable: function ( otp, done ) {
-
-        var data = { _id: _id, otp: otp };
-
-        if ( !done ) {
-          done = otp;
-          delete data.otp;
-        }
-
-        api.request.authorized( 'DELETE', resource + '/twoFactor', data, done );
-
-      },
-
-      enroll: function ( returnType, done ) {
-
-        var data = { _id: _id, returnType: returnType };
-
-        if ( !done ) {
-          done = returnType;
-          delete data.returnType;
-        }
-
-        api.request.authorized( 'POST', resource + '/twoFactor', data, done );
-
-      },
-
-      verify: function ( otp, done ) {
-        api.request.authorized( 'PATCH', resource + '/twoFactor', { _id: _id, otp: otp }, done );
-      }
-
-    };
-
-  };
-
-  api.oauth2.user.endpoint = api.oauth2.endpoint + '/user';
-
-  api.oauth2.user.add = function ( data, done ) {
-    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/register', data, done );
-  };
-
-  api.oauth2.user.list = function ( data, done ) {
-    api.request.authorized( 'GET', api.oauth2.user.endpoint, data, done );
-  };
-
-  api.oauth2.user.register = function ( data, done ) {
-    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/register', data, done );
-  };
-
-  api.oauth2.user.removeAll = function ( done ) {
-    api.request.authorized( 'DELETE', api.oauth2.user.endpoint, null, done );
-  };
-
-  api.oauth2.user.password = {};
-
-  api.oauth2.user.password.link = function ( data, done ) {
-    api.request.authorized( 'POST', api.oauth2.user.endpoint + '/password-reset', data, done );
-  };
-
-  api.oauth2.user.password.reset = function ( data, done ) {
-    api.request.authorized( 'PATCH', api.oauth2.user.endpoint + '/password-reset/' + data.code, data, done );
-  };
+  generate(
+    api.oauth2.user.twoFactor,
+    api.endpoint + '/oauth2/user/twoFactor',
+    [ 'disable', 'enroll', 'verify' ]
+  );
 
   api.operations = {};
 

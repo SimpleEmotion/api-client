@@ -19,7 +19,7 @@
     "lint-fix": "eslint . --quiet --fix"
   },
   "engines": {
-    "node": "^6.9.4"
+    "node": "^6.10.0"
   },
   "dependencies": {
     "eventsource": "^0.2.1",
