@@ -239,7 +239,7 @@ function APIClient( client_id, client_secret, opts ) {
   generate(
     api.communication.sms,
     api.endpoint + '/communication/sms',
-    [ 'next', 'queue', 'remove', ]
+    [ 'next', 'queue', 'remove' ]
   );
 
   generate(
@@ -491,6 +491,29 @@ function APIClient( client_id, client_secret, opts ) {
     api.storage.model,
     api.endpoint + '/storage/model',
     [ 'add', 'exists', 'get', 'getDownloadUrl', 'getUploadUrl', 'list', 'remove', 'rename' ]
+  );
+
+  api.webhook = {
+    delivery: {},
+    event: {}
+  };
+
+  generate(
+    api.webhook,
+    api.endpoint + '/webhook',
+    [ 'add', 'disable', 'enable', 'get', 'list', 'remove' ]
+  );
+
+  generate(
+    api.webhook.delivery,
+    api.endpoint + '/webhook/delivery',
+    [ 'add', 'get', 'list', 'retry', 'retryAll' ]
+  );
+
+  generate(
+    api.webhook.event,
+    api.endpoint + '/webhook/event',
+    [ 'add', 'get' ]
   );
 
   function generate( path, endpoint, methods ) {
