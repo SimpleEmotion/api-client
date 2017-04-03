@@ -326,8 +326,8 @@ function APIClient( client_id, client_secret, opts ) {
         method: 'POST',
         uri: api.host + api.oauth2.endpoint + '/revoke',
         json: {
-          client_id: client_id,
-          client_secret: client_secret,
+          client_id: api.credentials.client_id,
+          client_secret: api.credentials.client_secret,
           token: token
         }
       };
@@ -354,8 +354,8 @@ function APIClient( client_id, client_secret, opts ) {
       uri: api.host + api.oauth2.endpoint + '/token',
       json: {
         grant_type: data.grant_type || grant_type,
-        client_id: client_id,
-        client_secret: client_secret,
+        client_id: api.credentials.client_id,
+        client_secret: api.credentials.client_secret,
         email: data.email,
         password: data.password,
         otp: data.otp,
