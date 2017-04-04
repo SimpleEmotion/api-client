@@ -37,12 +37,7 @@ function APIClient( client_id, client_secret, opts ) {
         return done( new Error( 'No response.' ), null );
       }
 
-      try {
-        if ( !Array.isArray( body ) && typeof body !== 'object' ) {
-          body = JSON.parse( body );
-        }
-      }
-      catch ( err ) {
+      if ( typeof body !== 'object' && !Array.isArray( body ) ) {
         return done( body, null );
       }
 
