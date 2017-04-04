@@ -38,9 +38,12 @@ function APIClient( client_id, client_secret, opts ) {
       }
 
       try {
-        body = JSON.parse( body );
+        if ( !Array.isArray( body ) && typeof body !== 'object' ) {
+          body = JSON.parse( body );
+        }
       }
       catch ( err ) {
+        return done( body, null );
       }
 
       if ( body.err ) {
