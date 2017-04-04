@@ -506,7 +506,7 @@ function APIClient( client_id, client_secret, opts ) {
   generate(
     api.webhook.delivery,
     api.endpoint + '/webhook/delivery',
-    [ 'add', 'get', 'list', 'retry', 'retryAll', 'update' ]
+    [ 'add', 'get', 'list', 'retry', 'retryAll', 'update', 'remove' ]
   );
 
   generate(
