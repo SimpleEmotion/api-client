@@ -41,7 +41,6 @@ function APIClient( client_id, client_secret, opts ) {
         body = JSON.parse( body );
       }
       catch ( err ) {
-        return done( body, null );
       }
 
       if ( body.err ) {
