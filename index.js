@@ -509,13 +509,13 @@ function APIClient( client_id, client_secret, opts ) {
   generate(
     api.webhook.delivery,
     api.endpoint + '/webhook/delivery',
-    [ 'add', 'get', 'list', 'retry', 'retryAll' ]
+    [ 'add', 'get', 'list', 'retry', 'retryAll', 'update' ]
   );
 
   generate(
     api.webhook.event,
     api.endpoint + '/webhook/event',
-    [ 'add', 'get' ]
+    [ 'add', 'get', 'next', 'remove' ]
   );
 
   function generate( path, endpoint, methods ) {
