@@ -47,7 +47,7 @@ function main() {
         name: '/' + path.basename( filename )
       }
     },
-    function ( err ) {
+    err => {
 
       if ( err && err.code !== 404 ) {
         return console.error( err );
@@ -70,7 +70,7 @@ function main() {
           },
           ensure: true
         },
-        function ( err, result ) {
+        ( err, result ) => {
 
           if ( err ) {
             return console.error( err );
@@ -80,9 +80,9 @@ function main() {
 
           console.log( '[I] storage.audio._id:', `${audio._id}`.bgBlack );
 
-          console.log( `[!] Reading audio file from ${filename}.` );
+          console.log( `[!] Reading audio file from ${filename.bgBlack}.` );
 
-          fs.readFile( filename, function ( err, data ) {
+          fs.readFile( filename, ( err, data ) => {
 
             if ( err ) {
               return console.error( err );
@@ -94,7 +94,7 @@ function main() {
               {
                 audio: audio
               },
-              function ( err, result ) {
+              ( err, result ) => {
 
                 if ( err ) {
                   return console.error( err );
@@ -102,7 +102,7 @@ function main() {
 
                 console.log( '[!] Uploading audio file.' );
 
-                request.put( result.url, function ( err, res, body ) {
+                request.put( result.url, ( err, res, body ) => {
 
                   if ( err ) {
                     return console.error( err );
@@ -126,7 +126,7 @@ function main() {
 
                       console.log( '[!] Waiting for operation to complete.' );
 
-                      API.operations.onComplete( result, function ( err, result ) {
+                      API.operations.onComplete( result, ( err, result ) => {
 
                         if ( err ) {
                           return console.error( result );
@@ -147,7 +147,7 @@ function main() {
                               audio: audio
                             }
                           },
-                          function ( err, result ) {
+                          ( err, result ) => {
 
                             if ( err ) {
                               return console.error( err );
@@ -155,9 +155,9 @@ function main() {
 
                             const output = filename + '.transcript.turns.json';
 
-                            console.log( `[!] Writing transcription to ${output}.` );
+                            console.log( `[!] Writing transcription to ${output.bgBlack}.` );
 
-                            fs.writeFile( output, JSON.stringify( result.analysis.data ), function ( err ) {
+                            fs.writeFile( output, JSON.stringify( result.analysis.data ), err => {
 
                               if ( err ) {
                                 console.error( err );
