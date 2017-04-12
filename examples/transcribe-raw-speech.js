@@ -21,7 +21,7 @@ const Config = {
   service: 'transcribe-raw-speech'
 };
 
-const API = require( '../..' )( null, null, { scope: 'operations speech storage' } );
+const API = require( '..' )( null, null, { scope: 'operations speech storage' } );
 API.credentials = Config.credentials;
 
 if ( require.main === module ) {
