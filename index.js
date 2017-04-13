@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require( 'request' );
-var eventsource = require( 'eventsource' );
+var objectpath = require( 'object-path' );
 
 module.exports = APIClient;
 
@@ -112,93 +112,6 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-  // Path is path to resource, cb is on message callback, done is after creation callback
-  api.request.listen = function ( path, cb, done ) {
-
-    api.oauth2.token.grant( scope, function ( err, result ) {
-
-      if ( err ) {
-        return done( err, null );
-      }
-
-      tokens = result;
-
-      var opts = {
-        headers: { Authorization: 'Bearer ' + tokens.access_token }
-      };
-
-      try {
-
-        var es = new eventsource( api.host + path, opts );
-
-        es.addEventListener( 'message', function ( e ) {
-          var message;
-          try {
-            message = JSON.parse( e.data );
-          }
-          catch ( e ) {}
-          cb( null, message );
-        } );
-
-        es.addEventListener( 'error', function ( err ) {
-          cb( err, null );
-        } );
-
-        done( null, es );
-      }
-      catch ( err ) {
-        done( err, null );
-      }
-
-    } );
-
-  };
-
-  api.request.stream = function ( method, path, fd, done ) {
-
-    var opts = {
-      method: method,
-      uri: api.host + path,
-      headers: {}
-    };
-
-    api.oauth2.token.grant( scope, function ( err, result ) {
-
-      if ( err ) {
-        return done( err, null );
-      }
-
-      tokens = result;
-      opts.headers.Authorization = 'Bearer ' + tokens.access_token;
-
-      opts.formData = {
-        file: fd
-      };
-
-      request[ method.toLowerCase() ]( opts, function ( err, res, body ) {
-
-        if ( err ) {
-          return done( err, null );
-        }
-
-        if ( !res || !body ) {
-          return done( new Error( 'No response.' ), null );
-        }
-
-        body = JSON.parse( body );
-
-        if ( body.err ) {
-          return done( body.err, null );
-        }
-
-        done( null, body );
-
-      } );
-
-    } );
-
-  };
-
   api.getAuthTokens = function () {
     return tokens;
   };
@@ -207,107 +120,123 @@ function APIClient( client_id, client_secret, opts ) {
     tokens = auth_tokens || {};
   };
 
-  api.callcenter = {};
+  var methods = [
+    'callcenter.analyze',
+    'callcenter.events.detect',
+    'communication.email.next',
+    'communication.email.queue',
+    'communication.email.remove',
+    'communication.phone.get',
+    'communication.phone.link',
+    'communication.phone.verify',
+    'communication.phone.remove',
+    'communication.phone.addTwilio',
+    'communication.sms.next',
+    'communication.sms.queue',
+    'communication.sms.remove',
+    'communication.sms.send.message',
+    'communication.sms.send.verification',
+    'directory.organization.add',
+    'directory.organization.exists',
+    'directory.organization.get',
+    'directory.organization.list',
+    'directory.organization.remove',
+    'directory.organization.rename',
+    'directory.organization.service.add',
+    'directory.organization.service.remove',
+    'directory.organization.user.add',
+    'directory.organization.user.list',
+    'directory.organization.user.remove',
+    'directory.organization.user.invitation.add',
+    'directory.organization.user.invitation.remove',
+    'emotion.classify',
+    'language.problem.summarize',
+    'language.transcript.prettify',
+    'oauth2.credentials.generate',
+    'oauth2.credentials.get',
+    'oauth2.credentials.list',
+    'oauth2.credentials.redirect_uri.add',
+    'oauth2.credentials.redirect_uri.remove',
+    'oauth2.credentials.remove',
+    'oauth2.user.add',
+    'oauth2.user.get',
+    'oauth2.user.list',
+    'oauth2.user.register',
+    'oauth2.user.remove',
+    'oauth2.user.email.link',
+    'oauth2.user.email.verify',
+    'oauth2.user.password.link',
+    'oauth2.user.password.reset',
+    'oauth2.user.twoFactor.disable',
+    'oauth2.user.twoFactor.enroll',
+    'oauth2.user.twoFactor.verify',
+    'operations.add',
+    'operations.get',
+    'operations.list',
+    'operations.next',
+    'operations.remove',
+    'operations.update',
+    'speaker.diarize.voice',  // TODO: CHANGE TO SPEAKER.VOICE.DIARIZE
+    'speaker.diarize.words',  // TODO: CHANGE TO SPEAKER.WORDS.DIARIZE
+    'speaker.train',          // TODO: CHANGE TO SPEAKER.VOICE.TRAIN
+    'speech.detect',
+    'speech.transcribe',
+    'storage.analysis.add',
+    'storage.analysis.exists',
+    'storage.analysis.get',
+    'storage.analysis.list',
+    'storage.analysis.remove',
+    'storage.analysis.rename',
+    'storage.audio.add',
+    'storage.audio.exists',
+    'storage.audio.get',
+    'storage.audio.getDownloadUrl',
+    'storage.audio.getUploadUrl',
+    'storage.audio.list',
+    'storage.audio.move',
+    'storage.audio.process',
+    'storage.audio.remove',
+    'storage.audio.uploadFromUrl',
+    'storage.features.add',
+    'storage.features.exists',
+    'storage.features.get',
+    'storage.features.getDownloadUrl',
+    'storage.features.getUploadUrl',
+    'storage.features.list',
+    'storage.features.remove',
+    'storage.features.rename',
+    'storage.folder.add',
+    'storage.folder.exists',
+    'storage.folder.get',
+    'storage.folder.list',
+    'storage.model.add',
+    'storage.model.exists',
+    'storage.model.get',
+    'storage.model.getDownloadUrl',
+    'storage.model.getUploadUrl',
+    'storage.model.list',
+    'storage.model.remove',
+    'storage.model.rename',
+    'webhook.add',
+    'webhook.delivery.add',
+    'webhook.delivery.get',
+    'webhook.delivery.list',
+    'webhook.delivery.remove',
+    'webhook.delivery.retry',
+    'webhook.delivery.retryAll',
+    'webhook.delivery.update',
+    'webhook.disable',
+    'webhook.enable',
+    'webhook.event.add',
+    'webhook.event.get',
+    'webhook.event.next',
+    'webhook.event.remove',
+    'webhook.get',
+    'webhook.list',
+    'webhook.remove'
+  ];
 
-  generate(
-    api.callcenter,
-    api.endpoint + '/callcenter',
-    [ 'analyze', 'detectEvents' ]
-  );
-
-  api.communication = {
-    email: {},
-    phone: {},
-    sms: {
-      send: {}
-    }
-  };
-
-  generate(
-    api.communication.email,
-    api.endpoint + '/communication/email',
-    [ 'next', 'queue', 'remove' ]
-  );
-
-  generate(
-    api.communication.phone,
-    api.endpoint + '/communication/phone',
-    [ 'get', 'link', 'verify', 'remove', 'addTwilio' ]
-  );
-
-  generate(
-    api.communication.sms,
-    api.endpoint + '/communication/sms',
-    [ 'next', 'queue', 'remove' ]
-  );
-
-  generate(
-    api.communication.sms.send,
-    api.endpoint + '/communication/sms/send',
-    [ 'message', 'verification' ]
-  );
-
-  api.directory = {
-    organization: {
-      service: {},
-      user: {
-        invitation: {}
-      }
-    }
-  };
-
-  generate(
-    api.directory.organization,
-    api.endpoint + '/directory/organization',
-    [ 'add', 'exists', 'get', 'list', 'remove', 'rename' ]
-  );
-
-  generate(
-    api.directory.organization.service,
-    api.endpoint + '/directory/organization/service',
-    [ 'add', 'remove' ]
-  );
-
-  generate(
-    api.directory.organization.user,
-    api.endpoint + '/directory/organization/user',
-    [ 'add', 'list', 'remove' ]
-  );
-
-  generate(
-    api.directory.organization.user.invitation,
-    api.endpoint + '/directory/organization/user/invitation',
-    [ 'add', 'remove' ]
-  );
-
-  api.emotion = {};
-
-  generate(
-    api.emotion,
-    api.endpoint + '/emotion',
-    [ 'classify' ]
-  );
-
-  api.language = {};
-
-  generate(
-    api.language,
-    api.endpoint + '/language',
-    [ 'analyzeTranscript', 'extractProblemSummary' ]
-  );
-
-  api.oauth2 = {
-    credentials: {
-      redirect_uri: {}
-    },
-    user: {
-      email: {},
-      password: {},
-      twoFactor: {}
-    }
-  };
-
-  api.oauth2.endpoint = api.endpoint + '/oauth2';
+  generate( api, methods );
 
   api.oauth2.token = function Token( token ) {
 
@@ -315,15 +244,11 @@ function APIClient( client_id, client_secret, opts ) {
       return new Token( token );
     }
 
-    this.grant = function ( scope, done ) {
-      // TODO: SUPPORT TWO_FACTOR AND REFRESH_TOKEN
-    };
-
     this.revoke = function ( done ) {
 
       var opts = {
         method: 'POST',
-        uri: api.host + api.oauth2.endpoint + '/revoke',
+        uri: api.host + api.endpoint + '/oauth2/revoke',
         json: {
           client_id: api.credentials.client_id,
           client_secret: api.credentials.client_secret,
@@ -350,7 +275,7 @@ function APIClient( client_id, client_secret, opts ) {
 
     var opts = {
       method: 'POST',
-      uri: api.host + api.oauth2.endpoint + '/token',
+      uri: api.host + api.endpoint + '/oauth2/token',
       json: {
         grant_type: data.grant_type || grant_type,
         client_id: api.credentials.client_id,
@@ -370,50 +295,6 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-  generate(
-    api.oauth2.credentials,
-    api.endpoint + '/oauth2/credentials',
-    [ 'generate', 'get', 'list', 'remove' ]
-  );
-
-  generate(
-    api.oauth2.credentials.redirect_uri,
-    api.endpoint + '/oauth2/credentials/redirect_uri',
-    [ 'add', 'remove' ]
-  );
-
-  generate(
-    api.oauth2.user,
-    api.endpoint + '/oauth2/user',
-    [ 'add', 'get', 'list', 'register', 'remove' ]
-  );
-
-  generate(
-    api.oauth2.user.email,
-    api.endpoint + '/oauth2/user/email',
-    [ 'link', 'verify' ]
-  );
-
-  generate(
-    api.oauth2.user.password,
-    api.endpoint + '/oauth2/user/password',
-    [ 'link', 'reset' ]
-  );
-
-  generate(
-    api.oauth2.user.twoFactor,
-    api.endpoint + '/oauth2/user/twoFactor',
-    [ 'disable', 'enroll', 'verify' ]
-  );
-
-  api.operations = {};
-
-  generate(
-    api.operations,
-    api.endpoint + '/operations',
-    [ 'add', 'get', 'list', 'next', 'remove', 'update' ]
-  );
-
   api.operations.onComplete = function ( data, done ) {
     api.operations.get( data, function ( err, result ) {
 
@@ -430,97 +311,12 @@ function APIClient( client_id, client_secret, opts ) {
     } );
   };
 
-  api.speaker = {
-    diarize: {}
-  };
+}
 
-  generate(
-    api.speaker.diarize,
-    api.endpoint + '/speaker/diarize',
-    [ 'voice', 'words' ]
-  );
-
-  generate(
-    api.speaker,
-    api.endpoint + '/speaker',
-    [ 'train' ]
-  );
-
-  api.speech = {};
-
-  generate(
-    api.speech,
-    api.endpoint + '/speech',
-    [ 'detect', 'transcribe' ]
-  );
-
-  api.storage = {
-    analysis: {},
-    audio: {},
-    features: {},
-    folder: {},
-    model: {}
-  };
-
-  generate(
-    api.storage.analysis,
-    api.endpoint + '/storage/analysis',
-    [ 'add', 'exists', 'get', 'list', 'remove', 'rename' ]
-  );
-
-  generate(
-    api.storage.audio,
-    api.endpoint + '/storage/audio',
-    [ 'add', 'exists', 'get', 'getDownloadUrl', 'getUploadUrl', 'list', 'move', 'process', 'remove', 'uploadFromUrl' ]
-  );
-
-  generate(
-    api.storage.features,
-    api.endpoint + '/storage/features',
-    [ 'add', 'exists', 'get', 'list', 'getDownloadUrl', 'getUploadUrl', 'remove', 'rename' ]
-  );
-
-  generate(
-    api.storage.folder,
-    api.endpoint + '/storage/folder',
-    [ 'add', 'exists', 'get', 'list' ]
-  );
-
-  generate(
-    api.storage.model,
-    api.endpoint + '/storage/model',
-    [ 'add', 'exists', 'get', 'getDownloadUrl', 'getUploadUrl', 'list', 'remove', 'rename' ]
-  );
-
-  api.webhook = {
-    delivery: {},
-    event: {}
-  };
-
-  generate(
-    api.webhook,
-    api.endpoint + '/webhook',
-    [ 'add', 'disable', 'enable', 'get', 'list', 'remove' ]
-  );
-
-  generate(
-    api.webhook.delivery,
-    api.endpoint + '/webhook/delivery',
-    [ 'add', 'get', 'list', 'retry', 'retryAll', 'update', 'remove' ]
-  );
-
-  generate(
-    api.webhook.event,
-    api.endpoint + '/webhook/event',
-    [ 'add', 'get', 'next', 'remove' ]
-  );
-
-  function generate( path, endpoint, methods ) {
-    methods.forEach( function ( method ) {
-      path[ method ] = function ( data, done ) {
-        api.request.authorized( 'POST', endpoint + '/' + method, data, done );
-      };
+function generate( api, methods ) {
+  methods.forEach( function ( method ) {
+    objectpath.set( api, method, function ( data, done ) {
+      api.request.authorized( 'POST', api.endpoint + '/' + method.replace( '.', '/' ), data, done );
     } );
-  }
-
+  } );
 }
