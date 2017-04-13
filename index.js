@@ -121,8 +121,7 @@ function APIClient( client_id, client_secret, opts ) {
   };
 
   var methods = [
-    'callcenter.analyze',
-    'callcenter.metrics.contact.compute',
+    'callcenter.metrics.contact.compute',  // TODO: NOT YET EXPOSED
     'communication.email.next',
     'communication.email.queue',
     'communication.email.remove',
@@ -149,10 +148,10 @@ function APIClient( client_id, client_secret, opts ) {
     'directory.organization.user.remove',
     'directory.organization.user.invitation.add',
     'directory.organization.user.invitation.remove',
-    'emotion.tone.extract',
-    'language.problem.summarize',
-    'language.sentiment.extract',
-    'language.transcript.prettify',
+    'emotion.tone.extract',          // TODO: NOT YET EXPOSED
+    'language.problem.summarize',    // TODO: NOT YET EXPOSED
+    'language.sentiment.extract',    // TODO: NOT YET EXPOSED
+    'language.transcript.prettify',  // TODO: NOT YET EXPOSED
     'oauth2.credentials.generate',
     'oauth2.credentials.get',
     'oauth2.credentials.list',
