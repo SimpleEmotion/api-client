@@ -122,7 +122,7 @@ function APIClient( client_id, client_secret, opts ) {
 
   var methods = [
     'callcenter.analyze',
-    'callcenter.events.detect',
+    'callcenter.metrics.contact.compute',
     'communication.email.next',
     'communication.email.queue',
     'communication.email.remove',
@@ -149,8 +149,9 @@ function APIClient( client_id, client_secret, opts ) {
     'directory.organization.user.remove',
     'directory.organization.user.invitation.add',
     'directory.organization.user.invitation.remove',
-    'emotion.classify',
+    'emotion.tone.extract',
     'language.problem.summarize',
+    'language.sentiment.extract',
     'language.transcript.prettify',
     'oauth2.credentials.generate',
     'oauth2.credentials.get',
