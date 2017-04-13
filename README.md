@@ -1,6 +1,8 @@
 # simple-emotion-client-apis
 Simple Emotion Client APIs
 
+## API Build Statuses
+
 - [![CircleCI](https://circleci.com/gh/SimpleEmotion/simple-api-callcenter.svg?style=svg&circle-token=dbeb1407ef50e0787807044968671900b83f4618)](https://circleci.com/gh/SimpleEmotion/simple-api-callcenter) - Callcenter
 - [![CircleCI](https://circleci.com/gh/SimpleEmotion/simple-api-communication.svg?style=svg&circle-token=9a583567c41d6bd451778ad69f0e35af295ff8f9)](https://circleci.com/gh/SimpleEmotion/simple-api-communication) - Communication
 - [![CircleCI](https://circleci.com/gh/SimpleEmotion/simple-api-directory.svg?style=svg&circle-token=a3ad3ddb3ca8c0823910e62e31e74e9e6e694437)](https://circleci.com/gh/SimpleEmotion/simple-api-directory) - Directory
@@ -14,3 +16,9 @@ Simple Emotion Client APIs
 - [![CircleCI](https://circleci.com/gh/SimpleEmotion/simple-api-speech.svg?style=svg&circle-token=727725dc1e764306a686dbe3e892f5a784338664)](https://circleci.com/gh/SimpleEmotion/simple-api-speech) - Speech
 - [![CircleCI](https://circleci.com/gh/SimpleEmotion/simple-api-storage.svg?style=svg&circle-token=78a73f02cfc2119d24ad333726ddc0db44ee7f3b)](https://circleci.com/gh/SimpleEmotion/simple-api-storage) - Storage
 - [![CircleCI](https://circleci.com/gh/SimpleEmotion/simple-api-webhook.svg?style=svg&circle-token=0ff584eb60870b4a49f7b2e75ee293632f08f77d)](https://circleci.com/gh/SimpleEmotion/simple-api-webhook) - Webhook
+
+## Environment Variables
+
+- `SIMPLE_EMOTION_API_CLIENT_ID` - OAuth 2.0 Credentials `client_id`
+- `SIMPLE_EMOTION_API_CLIENT_SECRET` - OAuth 2.0 Credentials `client_secret`
+- `SIMPLE_EMOTION_API_USER_ID` - OAuth 2.0 User `_id`
