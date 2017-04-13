@@ -317,7 +317,7 @@ function APIClient( client_id, client_secret, opts ) {
 function generate( api, methods ) {
   methods.forEach( function ( method ) {
     objectpath.set( api, method, function ( data, done ) {
-      api.request.authorized( 'POST', api.endpoint + '/' + method.replaceAll( /\./g, '/' ), data, done );
+      api.request.authorized( 'POST', api.endpoint + '/' + method.replace( /\./g, '/' ), data, done );
     } );
   } );
 }
