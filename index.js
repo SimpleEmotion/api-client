@@ -178,9 +178,9 @@ function APIClient( client_id, client_secret, opts ) {
     'operations.next',
     'operations.remove',
     'operations.update',
-    'speaker.diarize.voice',  // TODO: CHANGE TO SPEAKER.VOICE.DIARIZE
-    'speaker.diarize.words',  // TODO: CHANGE TO SPEAKER.WORDS.DIARIZE
-    'speaker.train',          // TODO: CHANGE TO SPEAKER.VOICE.TRAIN
+    'speaker.diarize.voice',
+    'speaker.diarize.words',
+    'speaker.train',
     'speech.detect',
     'speech.transcribe',
     'storage.analysis.add',
