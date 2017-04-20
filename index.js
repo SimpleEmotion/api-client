@@ -150,6 +150,7 @@ function APIClient( client_id, client_secret, opts ) {
     'directory.organization.user.invitation.add',
     'directory.organization.user.invitation.remove',
     'emotion.tone.extract',
+    'integration.talkdesk.get',
     'language.problem.summarize',
     'language.sentiment.extract',
     'language.tags.extract',
