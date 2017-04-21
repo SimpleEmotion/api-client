@@ -1,7 +1,7 @@
 {
   "name": "simple-emotion-client-apis",
   "description": "Simple Emotion Client APIs",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SimpleEmotion/simple-emotion-client-apis.git"
@@ -19,10 +19,9 @@
     "lint-fix": "eslint . --quiet --fix"
   },
   "engines": {
-    "node": "^6.10.0"
+    "node": "^6.10.2"
   },
   "dependencies": {
-    "eventsource": "^0.2.1",
     "object-path": "^0.11.4",
     "request": "^2.79.0"
   },

@@ -68,11 +68,6 @@ function APIClient( client_id, client_secret, opts ) {
         opts.json = body;
       }
 
-      // So put the criteria in the header
-      else {
-        opts.headers[ 'X-GET-CRITERIA' ] = JSON.stringify( body );
-      }
-
     }
 
     if ( !tokens.access_token ) {
