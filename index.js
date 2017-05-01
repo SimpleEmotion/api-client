@@ -334,13 +334,13 @@ function batch( method, queries, done ) {
 
   var results = [];
 
-  (function next() {
+  (function next( i, n ) {
 
-    if ( !queries.length ) {
+    if ( i >= n ) {
       return done( null, results );
     }
 
-    method( queries.splice( 0, MAX_BATCH_SIZE ), function ( err, result ) {
+    method( queries.slice( i, MAX_BATCH_SIZE ), function ( err, result ) {
 
       if ( err ) {
         return done( err, results );
@@ -348,10 +348,10 @@ function batch( method, queries, done ) {
 
       results = results.concat( result );
 
-      next();
+      next( i + result.length, n );
 
     } );
 
-  })();
+  })( 0, queries.length );
 
 }
