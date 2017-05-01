@@ -313,8 +313,42 @@ function APIClient( client_id, client_secret, opts ) {
 
 function generate( api, methods ) {
   methods.forEach( function ( method ) {
+
     objectpath.set( api, method, function ( data, done ) {
       api.request.authorized( 'POST', api.endpoint + '/' + method.replace( /\./g, '/' ), data, done );
     } );
+
+    objectpath.set( api, method + '.batch', function ( data, done ) {
+      batch( objectpath.get( api, method ), data, done );
+    } );
+
   } );
+}
+
+function batch( method, queries, done ) {
+
+  var MAX_BATCH_SIZE = 100;
+
+  var results = [];
+
+  (function next() {
+
+    if ( !queries.length ) {
+      return done( null, results );
+    }
+
+    method( queries.splice( 0, MAX_BATCH_SIZE ), function ( err, result ) {
+
+      if ( err ) {
+        return done( err, results );
+      }
+
+      results = results.concat( result );
+
+      next();
+
+    } );
+
+  })();
+
 }
