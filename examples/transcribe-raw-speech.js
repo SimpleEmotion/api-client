@@ -18,7 +18,7 @@ const Config = {
     _id: process.env.SIMPLE_EMOTION_API_USER_ID,
     type: 'user'
   },
-  service: 'transcribe-raw-speech'
+  service: 'examples'
 };
 
 const API = require( '..' )( null, null, { scope: 'operations speech storage' } );
