@@ -29,7 +29,7 @@
     "buffer-equal-constant-time": "^1.0.1",
     "colors": "^1.1.2",
     "eslint": "^3.13.1",
-    "eslint-config-simpleemotion": "git+ssh://git@github.com/SimpleEmotion/eslint-config-simpleemotion.git#v0.2.1",
+    "@simple-emotion/eslint-config": "^0.3.0",
     "express": "^4.15.2"
   }
 }
