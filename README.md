@@ -1,5 +1,5 @@
-# simple-emotion-client-apis
-Simple Emotion Client APIs
+# api-client
+Simple Emotion API Client
 
 ## API Build Statuses
 
