@@ -4,13 +4,13 @@
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SimpleEmotion/simple-emotion-client-apis.git"
+    "url": "git+https://github.com/SimpleEmotion/api-client.git"
   },
   "author": "Akash Krishnan <ak@aakay.net>",
   "bugs": {
-    "url": "https://github.com/SimpleEmotion/simple-emotion-client-apis/issues"
+    "url": "https://github.com/SimpleEmotion/api-client/issues"
   },
-  "homepage": "https://github.com/SimpleEmotion/simple-emotion-client-apis",
+  "homepage": "https://github.com/SimpleEmotion/api-client",
   "main": "index.js",
   "scripts": {
     "eslint": "eslint",
@@ -29,7 +29,7 @@
     "buffer-equal-constant-time": "^1.0.1",
     "colors": "^1.1.2",
     "eslint": "^3.13.1",
-    "@simple-emotion/eslint-config": "^0.3.0",
+    "@simple-emotion/eslint-config": "^0.3.3",
     "express": "^4.15.2"
   }
 }
