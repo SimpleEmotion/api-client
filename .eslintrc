@@ -1,5 +1,5 @@
 {
-  "extends": "simpleemotion",
+  "extends": "@simple-emotion/eslint-config",
   "globals": { },
   "env": {
     "node": true,
