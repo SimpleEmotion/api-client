@@ -11,14 +11,14 @@ const request = require( 'request' );
 
 const Config = {
   credentials: {
-    client_id: '5910c872863cf83a944648bf',
-    client_secret: '8669653aa8f8ed946897b712deda628122e88468dc10c00e8a1155807c48bcbc'
+    client_id: process.env.SIMPLE_EMOTION_API_CLIENT_ID,
+    client_secret: process.env.SIMPLE_EMOTION_API_CLIENT_SECRET
   },
   owner: {
-    _id: 'simpleemotion',
-    type: 'organization'
+    _id: process.env.SIMPLE_EMOTION_API_USER_ID,
+    type: 'user'
   },
-  service: 'qa-app-talk-desk-integration'
+  service: 'examples'
 };
 
 const API = require( '..' )(
@@ -26,7 +26,7 @@ const API = require( '..' )(
   Config.credentials.client_secret,
   {
     scope: 'operations storage',
-    host: 'https://api.dev.simpleemotion.com'
+    host: 'https://api.simpleemotion.com'
   }
 );
 
@@ -81,8 +81,8 @@ function main() {
               basename: i + '-' + path.basename( url ),
               metadata: {
                 speakers: [
-                  { _id: '58742150247a89981300002a', role: 'agent' },
-                  { _id: 'COF Scrubbed 1', role: 'customer' }
+                  { _id: 'Jared', role: 'agent' },
+                  { _id: 'Steve Brown', role: 'customer' }
                 ]
               }
             },
