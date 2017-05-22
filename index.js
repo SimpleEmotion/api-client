@@ -616,6 +616,9 @@ function APIClient( client_id, client_secret, opts ) {
       }
     };
 
+    api.oauth2.v0.token.grant = api.oauth2.token.grant;
+    api.oauth2.v1.token.grant = api.oauth2.token.grant;
+
     api.request( opts, done );
 
   };
