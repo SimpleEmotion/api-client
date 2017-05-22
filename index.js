@@ -616,12 +616,19 @@ function APIClient( client_id, client_secret, opts ) {
       }
     };
 
-    api.oauth2.v0.token.grant = api.oauth2.token.grant;
-    api.oauth2.v1.token.grant = api.oauth2.token.grant;
-
     api.request( opts, done );
 
   };
+
+  if ( !api.oauth2.v0.token ) {
+    api.oauth2.v0.token = {};
+  }
+  api.oauth2.v0.token.grant = api.oauth2.token.grant;
+
+  if ( !api.oauth2.v1.token ) {
+    api.oauth2.v1.token = {};
+  }
+  api.oauth2.v1.token.grant = api.oauth2.token.grant;
 
   api.operations.onComplete = function ( data, done ) {
     api.operations.get( data, function ( err, result ) {
