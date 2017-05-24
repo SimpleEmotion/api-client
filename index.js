@@ -175,6 +175,12 @@ function APIClient( client_id, client_secret, opts ) {
     'directory.v0.organization.user.add',
     'directory.v1.organization.user.add',
 
+    'directory.organization.user.admin.grant',
+    'directory.v1.organization.user.admin.grant',
+
+    'directory.organization.user.admin.revoke',
+    'directory.v1.organization.user.admin.revoke',
+
     'directory.organization.user.list',
     'directory.v0.organization.user.list',
     'directory.v1.organization.user.list',
