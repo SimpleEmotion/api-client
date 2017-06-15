@@ -680,7 +680,7 @@ function batch( method, queries, done ) {
       return done( null, results );
     }
 
-    method( queries.slice( i, MAX_BATCH_SIZE ), function ( err, result ) {
+    method( queries.slice( i, i+MAX_BATCH_SIZE ), function ( err, result ) {
 
       if ( err ) {
         return done( err, results );
