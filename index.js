@@ -30,15 +30,15 @@ function APIClient( client_id, client_secret, opts ) {
     request( opts, function ( err, res, body ) {
 
       if ( err ) {
-        return done( err, null );
+        return done( { code: 500, err: err }, null );
       }
 
       if ( !res || !body ) {
-        return done( new Error( 'No response.' ), null );
+        return done( { code: 500, err: new Error( 'No response.' ) }, null );
       }
 
       if ( typeof body !== 'object' && !Array.isArray( body ) ) {
-        return done( body, null );
+        body = { err: { code: 500, err: new Error( body ) } };
       }
 
       if ( body.err ) {
