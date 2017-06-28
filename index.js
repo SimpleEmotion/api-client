@@ -1,7 +1,9 @@
 'use strict';
 
-var request = require( 'request' );
-var objectpath = require( 'object-path' );
+const request = require( 'request' );
+const objectpath = require( 'object-path' );
+
+const MAX_RETRY_COUNT = 5;
 
 module.exports = APIClient;
 
@@ -11,7 +13,7 @@ function APIClient( client_id, client_secret, opts ) {
     return new APIClient( client_id, client_secret, opts );
   }
 
-  var api = this;
+  const api = this;
 
   api.credentials = {
     client_id: client_id,
@@ -23,10 +25,10 @@ function APIClient( client_id, client_secret, opts ) {
   api.host = opts.host || 'https://api.simpleemotion.com';
   api.endpoint = opts.endpoint || '';
 
-  var scope = opts.scope || '';
-  var tokens = {};
+  const scope = opts.scope || '';
+  let tokens = {};
 
-  api.request = function ( opts, done ) {
+  api.request = function ( opts, done, retry_count ) {
     request( opts, function ( err, res, body ) {
 
       if ( err ) {
@@ -35,6 +37,10 @@ function APIClient( client_id, client_secret, opts ) {
 
       if ( !res || !body ) {
         return done( { code: 500, err: new Error( 'No response.' ) }, null );
+      }
+
+      if ( res.statusCode === 502 && ( retry_count || 0 ) < MAX_RETRY_COUNT ) {
+        api.request( opts, done, retry_count + 1 );
       }
 
       if ( typeof body !== 'object' && !Array.isArray( body ) ) {
@@ -52,7 +58,7 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.request.authorized = function ( method, path, body, done ) {
 
-    var opts = {
+    const opts = {
       method: method,
       uri: api.host + path,
       headers: {
@@ -115,7 +121,7 @@ function APIClient( client_id, client_secret, opts ) {
     tokens = auth_tokens || {};
   };
 
-  var methods = [
+  const methods = [
 
     'callcenter.metrics.agent.compute',
     'callcenter.v0.metrics.agent.compute',
@@ -577,7 +583,7 @@ function APIClient( client_id, client_secret, opts ) {
 
     this.revoke = function ( done ) {
 
-      var opts = {
+      const opts = {
         method: 'POST',
         uri: api.host + api.endpoint + '/oauth2/revoke',
         json: {
@@ -595,7 +601,7 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.oauth2.token.grant = function ( data, scope, done ) {
 
-    var grant_type = 'password';
+    let grant_type = 'password';
 
     if ( !done ) {
       grant_type = tokens.refresh_token ? 'refresh_token' : 'client_credentials';
@@ -604,7 +610,7 @@ function APIClient( client_id, client_secret, opts ) {
       data = {};
     }
 
-    var opts = {
+    const opts = {
       method: 'POST',
       uri: api.host + api.endpoint + '/oauth2/token',
       json: {
@@ -626,14 +632,10 @@ function APIClient( client_id, client_secret, opts ) {
 
   };
 
-  if ( !api.oauth2.v0.token ) {
-    api.oauth2.v0.token = {};
-  }
+  api.oauth2.v0.token = api.oauth2.v0.token || {};
   api.oauth2.v0.token.grant = api.oauth2.token.grant;
 
-  if ( !api.oauth2.v1.token ) {
-    api.oauth2.v1.token = {};
-  }
+  api.oauth2.v1.token = api.oauth2.v1.token || {};
   api.oauth2.v1.token.grant = api.oauth2.token.grant;
 
   api.operations.onComplete = function ( data, done ) {
@@ -670,9 +672,9 @@ function generate( api, methods ) {
 
 function batch( method, queries, done ) {
 
-  var MAX_BATCH_SIZE = 100;
+  const MAX_BATCH_SIZE = 100;
 
-  var results = [];
+  let results = [];
 
   (function next( i, n ) {
 
@@ -680,7 +682,7 @@ function batch( method, queries, done ) {
       return done( null, results );
     }
 
-    method( queries.slice( i, i+MAX_BATCH_SIZE ), function ( err, result ) {
+    method( queries.slice( i, i + MAX_BATCH_SIZE ), function ( err, result ) {
 
       if ( err ) {
         return done( err, results );
