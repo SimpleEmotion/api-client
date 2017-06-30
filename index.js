@@ -169,6 +169,10 @@ function APIClient( client_id, client_secret, opts ) {
     'directory.v0.organization.rename',
     'directory.v1.organization.rename',
 
+    'directory.organization.restore',
+    'directory.v0.organization.restore',
+    'directory.v1.organization.restore',
+
     'directory.organization.service.add',
     'directory.v0.organization.service.add',
     'directory.v1.organization.service.add',
@@ -194,10 +198,6 @@ function APIClient( client_id, client_secret, opts ) {
     'directory.organization.user.remove',
     'directory.v0.organization.user.remove',
     'directory.v1.organization.user.remove',
-
-    'directory.organization.user.restore',
-    'directory.v0.organization.user.restore',
-    'directory.v1.organization.user.restore',
 
     'directory.organization.user.invitation.add',
     'directory.v0.organization.user.invitation.add',
