@@ -189,6 +189,10 @@ function APIClient( client_id, client_secret, opts ) {
     'directory.v0.organization.user.remove',
     'directory.v1.organization.user.remove',
 
+    'directory.organization.user.restore',
+    'directory.v0.organization.user.restore',
+    'directory.v1.organization.user.restore',
+
     'directory.organization.user.invitation.add',
     'directory.v0.organization.user.invitation.add',
     'directory.v1.organization.user.invitation.add',
