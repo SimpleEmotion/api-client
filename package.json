@@ -1,7 +1,7 @@
 {
   "name": "@simple-emotion/api-client",
   "description": "Simple Emotion Client APIs",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SimpleEmotion/api-client.git"
@@ -18,18 +18,18 @@
     "lint-fix": "eslint . --quiet --fix"
   },
   "engines": {
-    "node": "^6.10.3"
+    "node": "^8.1.2"
   },
   "dependencies": {
     "object-path": "^0.11.4",
-    "request": "^2.79.0"
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "@simple-emotion/eslint-config": "^0.3.3",
-    "body-parser": "^1.17.1",
+    "body-parser": "^1.17.2",
     "buffer-equal-constant-time": "^1.0.1",
     "colors": "^1.1.2",
-    "eslint": "^3.13.1",
-    "express": "^4.15.2"
+    "eslint": "^3.19.0",
+    "express": "^4.15.3"
   }
 }
