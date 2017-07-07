@@ -43,8 +43,8 @@ function APIClient( client_id, client_secret, opts ) {
         return api.request( opts, done, retry_count + 1 );
       }
 
-      if ( typeof body !== 'object' && !Array.isArray( body ) ) {
-        body = { err: { code: res.statusCode || 500, err: new Error( body ) } };
+      if ( res.statusCode >= 400 || ( typeof body !== 'object' && !Array.isArray( body ) ) ) {
+        return done( { code: res.statusCode || 500, err: body.err || new Error( body ) } );
       }
 
       if ( body.err ) {
