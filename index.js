@@ -39,10 +39,6 @@ function APIClient( client_id, client_secret, opts ) {
         return done( { code: 500, err: new Error( 'No response.' ) }, null );
       }
 
-      if ( !res || !body ) {
-        return done( { code: 500, err: new Error( 'No response.' ) }, null );
-      }
-
       if ( res.statusCode === 502 && ( retry_count || 0 ) < MAX_RETRY_COUNT ) {
         return api.request( opts, done, retry_count + 1 );
       }
