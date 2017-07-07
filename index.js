@@ -35,16 +35,20 @@ function APIClient( client_id, client_secret, opts ) {
         return done( { code: 500, err: err }, null );
       }
 
+      if ( !res || (!body && res.statusCode < 400) ) {
+        return done( { code: 500, err: new Error( 'No response.' ) }, null );
+      }
+
       if ( !res || !body ) {
         return done( { code: 500, err: new Error( 'No response.' ) }, null );
       }
 
       if ( res.statusCode === 502 && ( retry_count || 0 ) < MAX_RETRY_COUNT ) {
-        api.request( opts, done, retry_count + 1 );
+        return api.request( opts, done, retry_count + 1 );
       }
 
       if ( typeof body !== 'object' && !Array.isArray( body ) ) {
-        body = { err: { code: 500, err: new Error( body ) } };
+        body = { err: { code: res.statusCode || 500, err: new Error( body ) } };
       }
 
       if ( body.err ) {
