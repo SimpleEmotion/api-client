@@ -21,6 +21,9 @@ function APIClient( client_id, client_secret, opts ) {
   };
 
   opts = opts || {};
+
+  opts.logger = opts.logger || console;
+
   api.protocol = opts.protocol || 'https';
   api.host = opts.host || 'https://api.simpleemotion.com';
   api.endpoint = opts.endpoint || '';
@@ -31,7 +34,7 @@ function APIClient( client_id, client_secret, opts ) {
   api.request = function ( req_opts, done, retry_count ) {
 
     if ( opts.debug ) {
-      console.log( req_opts );
+      opts.logger.log( req_opts );
     }
 
     request( req_opts, function ( err, res, body ) {
