@@ -28,19 +28,24 @@ function APIClient( client_id, client_secret, opts ) {
   const scope = opts.scope || '';
   let tokens = {};
 
-  api.request = function ( opts, done, retry_count ) {
-    request( opts, function ( err, res, body ) {
+  api.request = function ( req_opts, done, retry_count ) {
+
+    if ( opts.debug ) {
+      console.log( req_opts );
+    }
+
+    request( req_opts, function ( err, res, body ) {
 
       if ( err ) {
         return done( { code: 500, err: err }, null );
       }
 
-      if ( !res || (!body && res.statusCode < 400) ) {
+      if ( !res || ( !body && res.statusCode < 400 ) ) {
         return done( { code: 500, err: new Error( 'No response.' ) }, null );
       }
 
       if ( res.statusCode === 502 && ( retry_count || 0 ) < MAX_RETRY_COUNT ) {
-        return api.request( opts, done, retry_count + 1 );
+        return api.request( req_opts, done, retry_count + 1 );
       }
 
       if ( res.statusCode >= 400 || ( typeof body !== 'object' && !Array.isArray( body ) ) ) {
@@ -54,6 +59,7 @@ function APIClient( client_id, client_secret, opts ) {
       done( null, body );
 
     } );
+
   };
 
   api.request.authorized = function ( method, path, body, done ) {
