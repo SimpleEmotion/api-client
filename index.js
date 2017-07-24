@@ -67,6 +67,10 @@ function APIClient( client_id, client_secret, opts ) {
 
   api.request.authorized = function ( method, path, body, done ) {
 
+    if ( !tokens.access_token ) {
+      return reauthorize();
+    }
+
     const opts = {
       method: method,
       uri: api.host + path,
@@ -76,17 +80,9 @@ function APIClient( client_id, client_secret, opts ) {
       }
     };
 
-    if ( body ) {
-
-      // GET requests cannot have body
-      if ( method.toUpperCase() !== 'GET' ) {
-        opts.json = body;
-      }
-
-    }
-
-    if ( !tokens.access_token ) {
-      return reauthorize();
+    // GET requests cannot have body
+    if ( body && method.toUpperCase() !== 'GET' ) {
+      opts.json = body;
     }
 
     // Authorized attempt
@@ -96,7 +92,13 @@ function APIClient( client_id, client_secret, opts ) {
         return done( null, result );
       }
 
+      // Throw error for non-authentication errors
       if ( err.code !== 401 ) {
+        return done( err, null );
+      }
+
+      // Throw error for authentication errors not relating to expired jwt
+      if ( objectpath( err, 'reason.reason' ) !== 'jwt expired' ) {
         return done( err, null );
       }
 
@@ -112,10 +114,8 @@ function APIClient( client_id, client_secret, opts ) {
         }
 
         tokens = result;
-        opts.headers.Authorization = 'Bearer ' + tokens.access_token;
 
-        // Reauthorized attempt
-        api.request( opts, done );
+        api.request.authorized( method, path, body, done );
 
       } );
     }
