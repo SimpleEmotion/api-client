@@ -97,8 +97,18 @@ function APIClient( client_id, client_secret, opts ) {
         return done( err, null );
       }
 
+      let jwt_expired = false;
+
+      JSON.stringify( err, ( k, v ) => {
+        if ( k === 'reason' && v === 'jwt expired' ) {
+          jwt_expired = true;
+        }
+
+        return v;
+      } );
+
       // Throw error for authentication errors not relating to expired jwt
-      if ( objectpath.get( err, 'reason.reason' ) !== 'jwt expired' ) {
+      if ( !jwt_expired ) {
         return done( err, null );
       }
 
