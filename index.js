@@ -157,7 +157,6 @@ function APIClient( client_id, client_secret, opts ) {
     // 'communication.phone.remove',
     // 'communication.phone.addTwilio',
     // 'communication.sms.queue',
-    // 'communication.sms.send.message',
     // 'communication.sms.send.verification',
 
     'directory.organization.add',
