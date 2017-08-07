@@ -150,17 +150,13 @@ function APIClient( client_id, client_secret, opts ) {
     'callcenter.v0.metrics.contact.compute',
     'callcenter.v1.metrics.contact.compute',
 
-    // 'communication.email.next',
     // 'communication.email.queue',
-    // 'communication.email.remove',
     // 'communication.phone.get',
     // 'communication.phone.link',
     // 'communication.phone.verify',
     // 'communication.phone.remove',
     // 'communication.phone.addTwilio',
-    // 'communication.sms.next',
     // 'communication.sms.queue',
-    // 'communication.sms.remove',
     // 'communication.sms.send.message',
     // 'communication.sms.send.verification',
 
