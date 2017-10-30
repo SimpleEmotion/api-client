@@ -380,50 +380,65 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.analysis.add',
     'storage.v0.analysis.add',
     'storage.v1.analysis.add',
+    'storage.v2.analysis.add',
 
     'storage.analysis.exists',
     'storage.v0.analysis.exists',
     'storage.v1.analysis.exists',
+    'storage.v2.analysis.exists',
 
     'storage.analysis.get',
     'storage.v0.analysis.get',
     'storage.v1.analysis.get',
+    'storage.v2.analysis.get',
+
+    'storage.v2.analysis.getDownloadUrl',
 
     'storage.analysis.list',
     'storage.v0.analysis.list',
     'storage.v1.analysis.list',
+    'storage.v2.analysis.list',
 
     'storage.analysis.remove',
     'storage.v0.analysis.remove',
     'storage.v1.analysis.remove',
+    'storage.v2.analysis.remove',
 
     'storage.analysis.rename',
     'storage.v0.analysis.rename',
     'storage.v1.analysis.rename',
 
+    'storage.v2.analysis.update',
+
     'storage.audio.add',
     'storage.v0.audio.add',
     'storage.v1.audio.add',
+    'storage.v2.audio.add',
 
     'storage.audio.exists',
     'storage.v0.audio.exists',
     'storage.v1.audio.exists',
+    'storage.v2.audio.exists',
 
     'storage.audio.get',
     'storage.v0.audio.get',
     'storage.v1.audio.get',
+    'storage.v2.audio.get',
 
     'storage.audio.getDownloadUrl',
     'storage.v0.audio.getDownloadUrl',
     'storage.v1.audio.getDownloadUrl',
+    'storage.v2.audio.getDownloadUrl',
 
     'storage.audio.getUploadUrl',
     'storage.v0.audio.getUploadUrl',
     'storage.v1.audio.getUploadUrl',
+    'storage.v2.audio.getUploadUrl',
 
     'storage.audio.list',
     'storage.v0.audio.list',
     'storage.v1.audio.list',
+    'storage.v2.audio.list',
 
     'storage.audio.move',
     'storage.v0.audio.move',
@@ -432,14 +447,19 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.audio.process',
     'storage.v0.audio.process',
     'storage.v1.audio.process',
+    'storage.v2.audio.process',
 
     'storage.audio.remove',
     'storage.v0.audio.remove',
     'storage.v1.audio.remove',
+    'storage.v2.audio.remove',
+
+    'storage.v2.audio.rename',
 
     'storage.audio.uploadFromUrl',
     'storage.v0.audio.uploadFromUrl',
     'storage.v1.audio.uploadFromUrl',
+    'storage.v2.audio.uploadFromUrl',
 
     'storage.features.add',
     'storage.v0.features.add',
