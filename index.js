@@ -392,7 +392,7 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.v1.analysis.get',
     'storage.v2.analysis.get',
 
-    'storage.v2.analysis.getDownloadUrl',
+    'storage.v2.analysis.getLinks',
 
     'storage.analysis.list',
     'storage.v0.analysis.list',
@@ -425,10 +425,11 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.v1.audio.get',
     'storage.v2.audio.get',
 
+    'storage.v2.audio.getLinks',
+
     'storage.audio.getDownloadUrl',
     'storage.v0.audio.getDownloadUrl',
     'storage.v1.audio.getDownloadUrl',
-    'storage.v2.audio.getDownloadUrl',
 
     'storage.audio.getUploadUrl',
     'storage.v0.audio.getUploadUrl',
