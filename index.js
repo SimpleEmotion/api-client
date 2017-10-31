@@ -380,7 +380,6 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.analysis.add',
     'storage.v0.analysis.add',
     'storage.v1.analysis.add',
-    'storage.v2.analysis.add',
 
     'storage.analysis.exists',
     'storage.v0.analysis.exists',
