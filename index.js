@@ -336,14 +336,17 @@ function APIClient( client_id, client_secret, opts ) {
     'operations.add',
     'operations.v0.add',
     'operations.v1.add',
+    'operations.v2.add',
 
     'operations.get',
     'operations.v0.get',
     'operations.v1.get',
+    'operations.v2.get',
 
     'operations.list',
     'operations.v0.list',
     'operations.v1.list',
+    'operations.v2.list',
 
     'operations.next',
     'operations.v0.next',
@@ -352,6 +355,7 @@ function APIClient( client_id, client_secret, opts ) {
     'operations.remove',
     'operations.v0.remove',
     'operations.v1.remove',
+    'operations.v2.remove',
 
     'operations.update',
     'operations.v0.update',
