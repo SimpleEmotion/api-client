@@ -453,6 +453,13 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.v1.audio.process',
     'storage.v2.audio.process',
 
+    'storage.v2.audio.recording.add',
+    'storage.v2.audio.recording.exists',
+    'storage.v2.audio.recording.get',
+    'storage.v2.audio.recording.getLink',
+    'storage.v2.audio.recording.list',
+    'storage.v2.audio.recording.remove',
+
     'storage.audio.remove',
     'storage.v0.audio.remove',
     'storage.v1.audio.remove',
