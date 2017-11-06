@@ -388,30 +388,22 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.analysis.exists',
     'storage.v0.analysis.exists',
     'storage.v1.analysis.exists',
-    'storage.v2.analysis.exists',
 
     'storage.analysis.get',
     'storage.v0.analysis.get',
     'storage.v1.analysis.get',
-    'storage.v2.analysis.get',
-
-    'storage.v2.analysis.getLinks',
 
     'storage.analysis.list',
     'storage.v0.analysis.list',
     'storage.v1.analysis.list',
-    'storage.v2.analysis.list',
 
     'storage.analysis.remove',
     'storage.v0.analysis.remove',
     'storage.v1.analysis.remove',
-    'storage.v2.analysis.remove',
 
     'storage.analysis.rename',
     'storage.v0.analysis.rename',
     'storage.v1.analysis.rename',
-
-    'storage.v2.analysis.update',
 
     'storage.audio.add',
     'storage.v0.audio.add',
@@ -471,6 +463,12 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.v0.audio.uploadFromUrl',
     'storage.v1.audio.uploadFromUrl',
     'storage.v2.audio.uploadFromUrl',
+
+    'storage.v2.analysis.exists',
+    'storage.v2.analysis.get',
+    'storage.v2.analysis.getLink',
+    'storage.v2.analysis.list',
+    'storage.v2.analysis.remove',
 
     'storage.features.add',
     'storage.v0.features.add',
