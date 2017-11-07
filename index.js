@@ -464,11 +464,11 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.v1.audio.uploadFromUrl',
     'storage.v2.audio.uploadFromUrl',
 
-    'storage.v2.analysis.exists',
-    'storage.v2.analysis.get',
-    'storage.v2.analysis.getLink',
-    'storage.v2.analysis.list',
-    'storage.v2.analysis.remove',
+    'storage.v2.document.exists',
+    'storage.v2.document.get',
+    'storage.v2.document.getLink',
+    'storage.v2.document.list',
+    'storage.v2.document.remove',
 
     'storage.features.add',
     'storage.v0.features.add',
