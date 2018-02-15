@@ -150,7 +150,8 @@ function APIClient( client_id, client_secret, opts ) {
     'callcenter.v0.metrics.contact.compute',
     'callcenter.v1.metrics.contact.compute',
 
-    // 'communication.email.queue',
+    'communication.email.queue',
+    'communication.v0.email.queue',
     // 'communication.phone.get',
     // 'communication.phone.link',
     // 'communication.phone.verify',
