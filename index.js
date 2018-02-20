@@ -334,6 +334,9 @@ function APIClient( client_id, client_secret, opts ) {
     'oauth2.v0.user.twoFactor.verify',
     'oauth2.v1.user.twoFactor.verify',
 
+    'oauth2.verification.code.send',
+    'oauth2.v1.verification.code.send',
+
     'operations.add',
     'operations.v0.add',
     'operations.v1.add',
