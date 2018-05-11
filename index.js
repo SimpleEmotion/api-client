@@ -384,6 +384,7 @@ function APIClient( client_id, client_secret, opts ) {
     'speech.transcribe',
     'speech.v0.transcribe',
     'speech.v1.transcribe',
+    'speech.v2.transcribe',
 
     'storage.analysis.add',
     'storage.v0.analysis.add',
