@@ -427,6 +427,8 @@ function APIClient( client_id, client_secret, opts ) {
 
     'storage.v2.audio.getLinks',
 
+    'storage.v2.audio.analyze',
+
     'storage.audio.getDownloadUrl',
     'storage.v0.audio.getDownloadUrl',
     'storage.v1.audio.getDownloadUrl',
@@ -729,7 +731,7 @@ function batch( method, queries, done ) {
 
   let results = [];
 
-  (function next( i, n ) {
+  ( function next( i, n ) {
 
     if ( i >= n ) {
       return done( null, results );
@@ -747,6 +749,6 @@ function batch( method, queries, done ) {
 
     } );
 
-  })( 0, queries.length );
+  } )( 0, queries.length );
 
 }
