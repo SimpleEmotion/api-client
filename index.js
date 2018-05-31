@@ -150,6 +150,8 @@ function APIClient( client_id, client_secret, opts ) {
     'callcenter.v0.metrics.contact.compute',
     'callcenter.v1.metrics.contact.compute',
 
+    'callcenter.v2.transcript.classify',
+
     'communication.email.queue',
     'communication.v0.email.queue',
     // 'communication.phone.get',
@@ -426,8 +428,6 @@ function APIClient( client_id, client_secret, opts ) {
     'storage.v2.audio.get',
 
     'storage.v2.audio.getLinks',
-
-    'storage.v2.audio.analyze',
 
     'storage.audio.getDownloadUrl',
     'storage.v0.audio.getDownloadUrl',
