@@ -227,6 +227,7 @@ function APIClient( client_id, client_secret, opts ) {
     'emotion.tone.extract',
     'emotion.v0.tone.extract',
     'emotion.v1.tone.extract',
+    'emotion.v2.tone.extract',
 
     'integration.talkdesk.job',
     'integration.v0.talkdesk.job',
@@ -255,6 +256,7 @@ function APIClient( client_id, client_secret, opts ) {
     'language.sentiment.extract',
     'language.v0.sentiment.extract',
     'language.v1.sentiment.extract',
+    'language.v2.sentiment.extract',
 
     'language.tags.extract',
     'language.v0.tags.extract',
