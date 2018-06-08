@@ -339,33 +339,33 @@ function APIClient( client_id, client_secret, opts ) {
     'oauth2.verification.code.send',
     'oauth2.v1.verification.code.send',
 
-    'operations.add',
-    'operations.v0.add',
-    'operations.v1.add',
-    'operations.v2.add',
+    'operation.add',
+    'operation.v0.add',
+    'operation.v1.add',
+    'operation.v2.add',
 
-    'operations.get',
-    'operations.v0.get',
-    'operations.v1.get',
-    'operations.v2.get',
+    'operation.get',
+    'operation.v0.get',
+    'operation.v1.get',
+    'operation.v2.get',
 
-    'operations.list',
-    'operations.v0.list',
-    'operations.v1.list',
-    'operations.v2.list',
+    'operation.list',
+    'operation.v0.list',
+    'operation.v1.list',
+    'operation.v2.list',
 
-    'operations.next',
-    'operations.v0.next',
-    'operations.v1.next',
+    'operation.next',
+    'operation.v0.next',
+    'operation.v1.next',
 
-    'operations.remove',
-    'operations.v0.remove',
-    'operations.v1.remove',
-    'operations.v2.remove',
+    'operation.remove',
+    'operation.v0.remove',
+    'operation.v1.remove',
+    'operation.v2.remove',
 
-    'operations.update',
-    'operations.v0.update',
-    'operations.v1.update',
+    'operation.update',
+    'operation.v0.update',
+    'operation.v1.update',
 
     'speaker.voice.diarize',
     'speaker.v0.voice.diarize',
@@ -693,15 +693,15 @@ function APIClient( client_id, client_secret, opts ) {
   api.oauth2.v1.token = api.oauth2.v1.token || {};
   api.oauth2.v1.token.grant = api.oauth2.token.grant;
 
-  api.operations.onComplete = function ( data, done ) {
-    api.operations.get( data, function ( err, result ) {
+  api.operation.onComplete = function ( data, done ) {
+    api.operation.get( data, function ( err, result ) {
 
       if ( err ) {
         return done( err, null );
       }
 
       if ( !result.operation.states.completed ) {
-        return setTimeout( api.operations.onComplete.bind( null, data, done ), 1000 );
+        return setTimeout( api.operation.onComplete.bind( null, data, done ), 1000 );
       }
 
       done( null, result );
