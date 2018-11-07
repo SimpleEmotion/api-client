@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "object-path": "^0.11.4",
+    "path-to-regexp": "^2.4.0",
     "request": "^2.88.0"
   },
   "peerDependencies": {
