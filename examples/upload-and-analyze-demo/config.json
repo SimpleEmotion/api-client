@@ -1,0 +1,14 @@
+{
+  "api": {
+    "url": "https://api.dev.simpleemotion.com",
+    "prefix": "/",
+    "credentials": {
+      "client_id": "YOUR-CLIENT-ID",
+      "client_secret": "YOUR-CLIENT-SECRET"
+    }
+  },
+  "owner":{
+    "_id": "YOUR-ORGANIZATION-ID",
+    "type": "organization"
+  }
+}
