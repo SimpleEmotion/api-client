@@ -7,34 +7,31 @@
     "url": "git+https://github.com/simpleemotion/api-client.git"
   },
   "author": "Akash Krishnan <ak@aakay.net>",
-  "contributors": ["Zachary Shute <cosmonot1@gmail.com>"],
+  "contributors": [
+    "Zachary Shute <cosmonot1@gmail.com>"
+  ],
   "bugs": {
     "url": "https://github.com/simpleemotion/api-client/issues"
   },
   "homepage": "https://github.com/simpleemotion/api-client",
   "main": "lib/index.js",
-  "scripts": {
-    "eslint": "eslint",
-    "lint": "eslint . --quiet",
-    "lint-fix": "eslint . --quiet --fix"
-  },
+  "scripts": {},
   "engines": {
     "node": "^10.13.0"
   },
   "dependencies": {
     "object-path": "^0.11.4",
-    "path-to-regexp": "^2.4.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "url-template": "^2.0.8"
   },
   "peerDependencies": {
     "@simple-emotion/log": "^1.0.1"
   },
   "devDependencies": {
-    "@simple-emotion/eslint-config": "^0.3.3",
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "buffer-equal-constant-time": "^1.0.1",
     "colors": "^1.3.2",
-    "eslint": "^4.19.1",
     "express": "^4.16.4"
   }
 }

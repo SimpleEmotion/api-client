@@ -1,6 +1,6 @@
 {
   "api": {
-    "url": "https://api.dev.simpleemotion.com",
+    "url": "https://api.simpleemotion.com",
     "prefix": "/",
     "credentials": {
       "client_id": "YOUR-CLIENT-ID",

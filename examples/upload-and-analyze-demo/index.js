@@ -39,21 +39,25 @@ module.exports = {
  **************************/
 // Sets up a webhook that listens for the operation.complete event
 // Returns the webhook object
-async function addWebhook(uri) {
+async function addWebhook( uri ) {
+
   // Set up webhook for operation.complete event
-  const result = await p( SEAPI.webhook.v1.add )( {
-    webhook: {
-      owner: owner,
-      event: { type: 'operation.complete' },
-      url: uri, //TODO: fill in with your server's webhook url
-      secret: 'FAKE_SECRET' //TODO: fill in a secret. used to validate the webhook request origin and data
+  const result = await p( SEAPI.webhook.v1.add )(
+    {
+      webhook: {
+        owner: owner,
+        event: { type: 'operation.complete' },
+        url: uri, //TODO: fill in with your server's webhook url
+        secret: 'FAKE_SECRET' //TODO: fill in a secret. used to validate the webhook request origin and data
+      }
     }
-  } );
+  );
 
   console.log( 'Webhook add result:' );
   console.log( JSON.stringify( result, null, 2 ) );
 
   return result;
+
 }
 
 
@@ -69,32 +73,32 @@ async function uploadAudio( url, tags ) {
 
   // Add audio file
   const { audio } = await p( SEAPI.storage.v2.audio.add )( {
-    audio: {
-      name: uuidV4(),
-      owner: owner,
-      metadata: {
-        speakers: [
-          { _id: 'speakerCh0', role: 'customer' },
-          { _id: 'speakerCh1', role: 'agent' }
-        ]
-      }
-    }
-  } );
+                                                             audio: {
+                                                               name: uuidV4(),
+                                                               owner: owner,
+                                                               metadata: {
+                                                                 speakers: [
+                                                                   { _id: 'speakerCh0', role: 'customer' },
+                                                                   { _id: 'speakerCh1', role: 'agent' }
+                                                                 ]
+                                                               }
+                                                             }
+                                                           } );
 
   console.log( 'Audio add result:' );
   console.log( JSON.stringify( audio, null, 2 ) );
 
   // Upload raw audio data
   const { operation } = await p( SEAPI.storage.v2.audio.uploadFromUrl )( {
-    audio: {
-      _id: audio._id,
-      owner: owner
-    },
-    url: url,
-    operation: {
-      tags: [ `audio_id=${audio._id}`, ...tags ]
-    }
-  } );
+                                                                           audio: {
+                                                                             _id: audio._id,
+                                                                             owner: owner
+                                                                           },
+                                                                           url: url,
+                                                                           operation: {
+                                                                             tags: [ `audio_id=${audio._id}`, ...tags ]
+                                                                           }
+                                                                         } );
 
   console.log( 'Audio uploadFromUrl result' );
   console.log( JSON.stringify( operation, null, 2 ) );

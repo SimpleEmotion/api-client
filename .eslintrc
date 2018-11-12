@@ -1,8 +1,0 @@
-{
-  "extends": "@simple-emotion/eslint-config",
-  "globals": { },
-  "env": {
-    "node": true,
-    "mocha": true
-  }
-}
