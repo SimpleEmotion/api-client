@@ -37,7 +37,7 @@ app.post( CALLBACK_PATH, ( req, res, next ) => {
   const event = req.body.event.type;
 
   // TODO: HANDLE EVENT
-  console.log( req.body );
+  console.log( event, req.body );
 
 } );
 

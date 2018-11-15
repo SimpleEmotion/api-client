@@ -1,19 +1,20 @@
 {
   "api": {
     "url": "https://api.simpleemotion.com",
-    "prefix": "/",
     "credentials": {
-      "client_id": "CLIENT ID",
-      "client_secret": "YOUR SECRET"
+      "client_id": "ENTER CLIENT ID",
+      "client_secret": "ENTER CLIENT SECRET"
     }
   },
   "owner": {
-    "_id": "YOUR ORG NAME",
+    "_id": "ENTER ORGANIZATION ID",
     "type": "organization"
   },
-  "secret": "FAKE_SECRET",
+  "webhook": {
+    "secret": "ENTER CUSTOM SECRET"
+  },
   "server": {
-    "port": "80",
-    "storagePath":"./analysis"
+    "port": 80,
+    "storagePath": "./analysis"
   }
 }

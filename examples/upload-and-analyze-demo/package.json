@@ -1,21 +1,27 @@
 {
   "name": "upload-and-analyze-demo",
-  "version": "1.0.0",
   "description": "Example code for setting up a webhook, catching events, uploading audio, and starting analysis.",
+  "version": "1.0.0",
+  "author": "Zachary Shute <zach@simpleemotion.com>",
+  "contributors": [
+    "Akash Krishnan <ak@aakay.net>"
+  ],
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node index.js server",
     "upload": "node index.js upload"
   },
-  "author": "Zachary Shute <zach@simpleemotion.com>",
-  "license": "ISC",
+  "engines": {
+    "node": "^10.13.0"
+  },
   "dependencies": {
-    "@simple-emotion/api-client": "^2.0.4",
+    "@simple-emotion/api-client": "^2.0.5",
     "body-parser": "^1.18.3",
     "buffer-equal-constant-time": "^1.0.1",
     "express": "^4.16.4",
-    "request": "^2.88.0",
-    "uuid": "^3.3.2"
+    "mkdirp": "^0.5.1",
+    "request": "^2.88.0"
   }
 }
