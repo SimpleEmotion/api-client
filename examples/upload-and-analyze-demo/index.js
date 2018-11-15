@@ -4,9 +4,16 @@ const { promisify: p } = require( 'util' );
 const config = require( './config' );
 const SEAPIClient = require( '@simple-emotion/api-client' );
 const uuidV4 = require( 'uuid/v4' );
+const fs = require( 'fs' );
+const path = require( 'path' );
+const express = require( 'express' );
+const crypto = require( 'crypto' );
+const bufferEq = require( 'buffer-equal-constant-time' );
+const request = require( 'request' );
 
-//TODO: FILL IN THE REQUIRED INFO IN CONFIG (client_id, client_secret, and owner._id)
-const owner = config.owner;
+const CALLBACK_SECRET = config.secret || 'SUPER SECRET';
+const OWNER = config.owner;
+const STORAGE_DIR = path.resolve( config.server.storagePath );
 
 // Set up api
 const SEAPI = SEAPIClient(
@@ -24,54 +31,159 @@ const SEAPI = SEAPIClient(
   }
 );
 
-const audioURL = "YOUR-AUDIO-URL";
-const webhookURL = 'YOUR-SERVERS-WEBHOOK-ENDPOINT';
-
 module.exports = {
   handler,
-  addWebhook,
-  uploadAudio,
-  analyzeAudio
+  server,
+  upload
 };
 
-/**************************
- * One time webhook set up
- **************************/
-// Sets up a webhook that listens for the operation.complete event
-// Returns the webhook object
-async function addWebhook(uri) {
-  // Set up webhook for operation.complete event
-  const result = await p( SEAPI.webhook.v1.add )( {
-    webhook: {
-      owner: owner,
-      event: { type: 'operation.complete' },
-      url: uri, //TODO: fill in with your server's webhook url
-      secret: 'FAKE_SECRET' //TODO: fill in a secret. used to validate the webhook request origin and data
-    }
-  } );
+if ( require.main === module ) {
 
-  console.log( 'Webhook add result:' );
-  console.log( JSON.stringify( result, null, 2 ) );
+  const type = process.argv[ 2 ];
+  const uri = process.argv[ 3 ];
 
-  return result;
+  if ( !type || !uri ) {
+    throw new Error( `Must specify ${type ? 'CLI operation type' : 'URI'}.` );
+  }
+
+  switch ( type ) {
+    case 'server':
+      server( uri ).then().catch( err => {
+        console.error( err );
+        process.exit( 1 );
+      } );
+      break;
+    case 'upload':
+      upload( uri ).then( result => {
+        console.log( `Audio uploaded. Audio _id: ${result.audio._id}. Operation _id: ${result.operation._id}.` )
+        process.exit( 0 );
+      } ).catch( err => {
+        console.error( err );
+        process.exit( 1 );
+      } );
+      break;
+    default:
+      throw new Error( 'Unsupported CLI operation type. Refer to README for useage examples.' );
+  }
+
 }
 
+// Basic webhook handler. NOTE: ignores request signature validation. See docs for proper webhook handling https://docs.simpleemotion.com/docs/handling-webhooks
+async function handler( req, res, next ) {
+  try {
 
-/**************************
- * Functions to run for every audio you want analyzed
- **************************/
-// Creates an audio file and uploads audio data to the SE database
-// webhooks registered for the 'operation.completed' event will be hit when upload operation completes
-// url is the url the your audio file is stored at
-// tags is an array of strings to attach to the upload operation as tags
-// returns audio id and upload operation id
-async function uploadAudio( url, tags ) {
+    // Extract signature and payload from request for verification
+    const signature = req.get( 'X-SE-Signature' ) || '';
+    const payload = JSON.stringify( req.body || '' );
+
+    // Compute signature from payload
+    const computed_signature = sign( CALLBACK_SECRET, payload );
+
+    // Securely verify signatures match
+    if ( !equal( signature, computed_signature ) ) {
+      res.statusCode = 200;
+      res.write( 'Signature mismatch. Received invalid webhook.' );
+      return res.end();
+    }
+
+    // Response must echo webhook challenge
+    res.set( 'X-SE-Challenge', req.get( 'X-SE-Challenge' ) );
+
+    // Extract event
+    const event_type = req.body.event.type;
+
+    // Not an operation complete event so we can ignore it in this demo.
+    if ( event_type !== 'operation.complete' ) {
+      console.log( 'Ignoring event we dont care about:', req.body.event.type );
+      res.statusCode = 200;
+      return res.end();
+    }
+
+    const data = req.body.data;
+
+    // Get the operation to check result
+    const { operation } = await p( SEAPI.operation.v2.get )( data );
+
+    if ( operation.error ) {
+      console.log( 'Operation failed!' );
+      console.error( operation.error );
+      res.statusCode = 200;
+      return res.end();
+    }
+
+    if ( operation.type === 'transload-audio' ) {
+      await analyzeAudio( operation.parameters.audio_id );
+      console.log( `Started classify-transcript operation for audio _id: ${operation.parameters.audio_id}.` );
+      res.statusCode = 200;
+      return res.end();
+    }
+
+    else if ( operation.type === 'classify-transcript' ) {
+
+      const { document } = await p( SEAPI.storage.v2.document.getLink )( { document: operation.result.document.transcript } );
+
+      // If we are running it NOT in GCF then download the JSON data of the analysis file
+      // Will close request because downloading data could time out req
+      if ( !process.env.GCP_PROJECT ) {
+        await downloadAnalysis( document.link, operation.parameters.audio_id );
+        console.log( `Analysis data downloaded to ${generateLocalFilename( operation.parameters.audio_id )}` );
+      }
+
+    }
+
+    res.statusCode = 200;
+    res.end();
+
+  } catch ( err ) {
+    if ( !err.code ) {
+      err = {
+        code: 500,
+        err: err.message
+      };
+    }
+
+    res.statusCode = err.code;
+    res.json( err );
+    res.end();
+  }
+}
+
+// Start a webhook basic handler server
+async function server( uri ) {
+  // Ensure that a webhook exists for the specified URI
+  console.log( '[!] Ensuring callback webhook.' );
+  await ensureWebhook( uri );
+
+  // If we are running it NOT in GCF then make sure the storage directory exists
+  if ( !process.env.GCP_PROJECT ) {
+    await ensureStorageDirectory();
+  }
+
+  // Create an express server
+  console.log( '[!] Initializing HTTP server.' );
+  const app = express();
+  const server = require( 'http' ).createServer( app );
+
+  console.log( '[!] Configuring HTTP server.' );
+  app.use( require( 'body-parser' ).json( { strict: true } ) );
+
+  // Handle incoming webhook requests
+  app.post( '/', handler );
+
+  console.log( '[!] Starting web server.' );
+  const port = config.server.port;
+  server.listen( port );
+
+}
+
+// Upload an audio file from a URI
+async function upload( url, tags ) {
 
   // Add audio file
   const { audio } = await p( SEAPI.storage.v2.audio.add )( {
     audio: {
       name: uuidV4(),
-      owner: owner,
+      owner: OWNER,
       metadata: {
         speakers: [
           { _id: 'speakerCh0', role: 'customer' },
@@ -81,39 +193,65 @@ async function uploadAudio( url, tags ) {
     }
   } );
 
-  console.log( 'Audio add result:' );
-  console.log( JSON.stringify( audio, null, 2 ) );
-
   // Upload raw audio data
   const { operation } = await p( SEAPI.storage.v2.audio.uploadFromUrl )( {
     audio: {
       _id: audio._id,
-      owner: owner
+      owner: OWNER
     },
     url: url,
     operation: {
-      tags: [ `audio_id=${audio._id}`, ...tags ]
+      tags: [ `audio_id=${audio._id}`, ... ( tags || [] ) ]
     }
   } );
 
-  console.log( 'Audio uploadFromUrl result' );
-  console.log( JSON.stringify( operation, null, 2 ) );
-
-  return { audio, operation };
+  return { audio: { _id: audio._id }, operation: { _id: operation._id } };
 
 }
 
-// Begins a classify-transcript analysis operation for the specified audioId.
-// webhooks registered for the 'operation.completed' event will be hit when analysis operation completes
-// audioId is the audio._id for the audio file that you want to analyze
-// Returns the operation object
+// Buffer equals
+function equal( a, b ) {
+  return bufferEq( Buffer.from( a ), Buffer.from( b ) );
+}
+
+// Compute signature
+function sign( secret, data ) {
+  return crypto.createHmac( 'sha1', secret ).update( data ).digest( 'hex' );
+}
+
+// Ensure that a webhook exists for the specified uri and owner from config
+async function ensureWebhook( uri ) {
+  const webhook = await p( SEAPI.webhook.v1.list )( {
+    webhook: {
+      owner: OWNER,
+      event: { type: 'operation.complete' },
+      states: { enabled: true }
+    }
+  } ).then( result => result.webhooks.find( w => w.url === uri ) );
+
+  if ( webhook ) {
+    return webhook;
+  }
+
+  // Set up webhook for operation.complete event
+  return await p( SEAPI.webhook.v1.add )( {
+    webhook: {
+      owner: OWNER,
+      event: { type: 'operation.complete' },
+      url: uri,
+      secret: CALLBACK_SECRET
+    }
+  } ).then( result => result.webhook );
+}
+
+// Start a classify transcript operation for the specified audio id
 async function analyzeAudio( audioId ) {
   // Start up an operation
-  const operation = await p( SEAPI.callcenter.v2.transcript.classify )(
+  return await p( SEAPI.callcenter.v2.transcript.classify )(
     {
       audio: {
         _id: audioId,
-        owner: owner
+        owner: OWNER
       },
       operation: {
         config: {
@@ -128,62 +266,64 @@ async function analyzeAudio( audioId ) {
       }
     }
   );
-
-  console.log( 'Started classify transcript operation' );
-  console.log( JSON.stringify( operation, null, 2 ) );
-  return operation;
 }
 
-// Basic webhook handler. NOTE: ignores request signature validation. See docs for proper webhook handling https://docs.simpleemotion.com/docs/handling-webhooks
-function handler( req, res ) {
-  const data = req.body.data;
-
-  // Respond to the webhook
-  res.set( 'X-SE-Challenge', req.get( 'X-SE-Challenge' ) );
-  res.status( 200 ).end();
-
-  // Wrong event. Ignore.
-  if ( req.body.event.type !== 'operation.complete' ) {
-    return console.log( 'Received event we dont care about:', req.body.event.type );
+// Check if storage directory exists and make it if it does not
+async function ensureStorageDirectory() {
+  try {
+    // Check if storage directory exists
+    await p( fs.access )( STORAGE_DIR, fs.constants.R_OK );
+  } catch ( err ) {
+    // Directory doesn't exist so make it
+    await p( fs.mkdir )( STORAGE_DIR );
   }
+}
 
-  SEAPI.operation.v2.get( data, ( err, result ) => {
-    if ( err ) {
-      return console.error( err );
-    }
+function generateLocalFilename( audioId ) {
+  return path.resolve( STORAGE_DIR, audioId ) + '.json';
+}
 
-    if ( result.operation.error ) {
-      console.log( 'Operation failed!' );
-      return console.error( result.operation.error );
-    }
+// Download the contents of the URL to a local file
+async function downloadAnalysis( url, audioId ) {
+  return new Promise( ( resolve, reject ) => {
+    let returned = false;
 
-    if ( result.operation.type === 'transload-audio' ) {
-      analyzeAudio( result.operation.parameters.audio_id ).then( console.log ).catch( console.log );
-    }
-    else if ( result.operation.type === 'classify-transcript' ) {
-      console.log( 'Analysis complete!' );
-      console.log( result.operation );
+    const done = err => {
+      if ( returned ) {
+        return;
+      }
 
-      SEAPI.storage.v2.document.getLink( { document: result.operation.result.document.classifications }, ( err, result ) => {
-        if ( err ) {
-          return console.error( err );
+      returned = true;
+
+      if ( err ) {
+        reject( err );
+      }
+
+      resolve();
+
+    };
+
+    // Get request to the URL
+    request( { url: url } )
+      .on( 'error', done )
+      .on( 'response', read => {
+
+        read.pause();
+
+        if ( read.statusCode >= 300 ) {
+          return done( new Error( 'Unable to download file from url.' ) );
         }
 
-        console.log( 'analysis link:', result.document.link );
+        // Stream the contents to a local file
+        const write = fs.createWriteStream( generateLocalFilename( audioId ) );
 
-        // JSON data can be downloaded from result.document.link. Links expire after 30 seconds.
-        // Analysis result from each step of the pipe line can be obtained by inspecting the operation.progress[] field
-        // Check operation.progress[].result.document for the document info and use the SEAPI.storage.v2.document.getLink
-        // API function
+        write.on( 'error', done );
+        write.on( 'finish', done );
+
+        read.pipe( write );
+        read.resume();
 
       } );
-    }
-
   } );
+
 }
-
-// Call this function to add a webhook - Only needs to be done once per URI
-// addWebhook(webhookURL).then( console.log ).catch( console.log );
-
-// Call this function to upload an audio file
-// uploadAudio( audioURL, [] ).then( console.log ).catch( console.log );
