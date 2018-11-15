@@ -31,11 +31,7 @@ const SEAPI = SEAPIClient(
   }
 );
 
-module.exports = {
-  handler,
-  server,
-  upload
-};
+module.exports = handler;
 
 if ( require.main === module ) {
 
