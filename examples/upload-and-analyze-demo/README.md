@@ -18,7 +18,7 @@ const { handler } = require( './index.js' );
 
 ### Upload
 ```
-npm run upload <AUDIO_FILE_URI>
+npm run upload <AUDIO_FILE_URL>
 ```
 
 Creates a new Simple Emotion audio object and starts an upload operation (`transload-audio`).
