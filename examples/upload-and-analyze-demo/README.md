@@ -1,27 +1,27 @@
-#Simple Emotion API Demo
+# Simple Emotion API Demo
 API demo that shows how to upload an audio file, start analysis, and create a basic server to catch incoming
 webhooks. Two scripts are provided. One uploads an audio file and the other starts a basic HTTP server that
 listens for webhooks from Simple Emotion.
 
 This module exports the webhook handler function and two CLI operations.
 
-##Module Useage:
+## Module Useage:
 
 If the `index.js` file is loaded as a module, the HTTP server's request handler function for handling incoming
 webhooks is exposed under under the default export.
 
 `const handler = require('./index.js');`
 
-##CLI Useage:
+## CLI Useage:
 
-###Upload:
+### Upload:
 `npm run upload <AUDIO_FILE_URI>`
 
 Creates a new Simple Emotion audio object and starts an upload operation (`transload-audio`).
 
 EX: `npm run upload "https://cdn.simpleemotion.com/audio/calls/steve-brown.wav"`
 
-###Server:
+### Server:
 `npm run server <WEBHOOK_SERVER_URI>`
 
 Starts a basic HTTP server that creates a webhook for your organization and listens for

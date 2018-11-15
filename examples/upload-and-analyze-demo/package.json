@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node ./index.js server",
-    "upload": "node ./index.js upload"
+    "server": "node index.js server",
+    "upload": "node index.js upload"
   },
   "author": "Zachary Shute <zach@simpleemotion.com>",
   "license": "ISC",

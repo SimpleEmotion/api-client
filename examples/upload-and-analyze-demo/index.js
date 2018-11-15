@@ -176,30 +176,34 @@ async function server( uri ) {
 async function upload( url, tags ) {
 
   // Add audio file
-  const { audio } = await p( SEAPI.storage.v2.audio.add )( {
-    audio: {
-      name: uuidV4(),
-      owner: OWNER,
-      metadata: {
-        speakers: [
-          { _id: 'speakerCh0', role: 'customer' },
-          { _id: 'speakerCh1', role: 'agent' }
-        ]
+  const { audio } = await p( SEAPI.storage.v2.audio.add )(
+    {
+      audio: {
+        name: uuidV4(),
+        owner: OWNER,
+        metadata: {
+          speakers: [
+            { _id: 'speakerCh0', role: 'customer' },
+            { _id: 'speakerCh1', role: 'agent' }
+          ]
+        }
       }
     }
-  } );
+  );
 
   // Upload raw audio data
-  const { operation } = await p( SEAPI.storage.v2.audio.uploadFromUrl )( {
-    audio: {
-      _id: audio._id,
-      owner: OWNER
-    },
-    url: url,
-    operation: {
-      tags: [ `audio_id=${audio._id}`, ... ( tags || [] ) ]
+  const { operation } = await p( SEAPI.storage.v2.audio.uploadFromUrl )(
+    {
+      audio: {
+        _id: audio._id,
+        owner: OWNER
+      },
+      url: url,
+      operation: {
+        tags: [ `audio_id=${audio._id}`, ... ( tags || [] ) ]
+      }
     }
-  } );
+  );
 
   return { audio: { _id: audio._id }, operation: { _id: operation._id } };
 
@@ -217,27 +221,31 @@ function sign( secret, data ) {
 
 // Ensure that a webhook exists for the specified uri and owner from config
 async function ensureWebhook( uri ) {
-  const webhook = await p( SEAPI.webhook.v1.list )( {
-    webhook: {
-      owner: OWNER,
-      event: { type: 'operation.complete' },
-      states: { enabled: true }
+  const webhook = await p( SEAPI.webhook.v1.list )(
+    {
+      webhook: {
+        owner: OWNER,
+        event: { type: 'operation.complete' },
+        states: { enabled: true }
+      }
     }
-  } ).then( result => result.webhooks.find( w => w.url === uri ) );
+  ).then( result => result.webhooks.find( w => w.url === uri ) );
 
   if ( webhook ) {
     return webhook;
   }
 
   // Set up webhook for operation.complete event
-  return await p( SEAPI.webhook.v1.add )( {
-    webhook: {
-      owner: OWNER,
-      event: { type: 'operation.complete' },
-      url: uri,
-      secret: CALLBACK_SECRET
+  return await p( SEAPI.webhook.v1.add )(
+    {
+      webhook: {
+        owner: OWNER,
+        event: { type: 'operation.complete' },
+        url: uri,
+        secret: CALLBACK_SECRET
+      }
     }
-  } ).then( result => result.webhook );
+  ).then( result => result.webhook );
 }
 
 // Start a classify transcript operation for the specified audio id
@@ -275,32 +283,24 @@ async function ensureStorageDirectory() {
   }
 }
 
-function generateLocalFilename( audioId ) {
-  return path.resolve( STORAGE_DIR, audioId ) + '.json';
-}
-
 // Download the contents of the URL to a local file
 async function downloadAnalysis( url, audioId ) {
   return new Promise( ( resolve, reject ) => {
+
     let returned = false;
 
     const done = err => {
-      if ( returned ) {
-        return;
+      if ( !returned ) {
+
+        returned = true;
+
+        err ? reject( err ) : resolve();
+
       }
-
-      returned = true;
-
-      if ( err ) {
-        reject( err );
-      }
-
-      resolve();
-
     };
 
     // Get request to the URL
-    request( { url: url } )
+    request( { url } )
       .on( 'error', done )
       .on( 'response', read => {
 
@@ -320,6 +320,10 @@ async function downloadAnalysis( url, audioId ) {
         read.resume();
 
       } );
-  } );
 
+  } );
+}
+
+function generateLocalFilename( audioId ) {
+  return path.resolve( STORAGE_DIR, audioId ) + '.json';
 }
