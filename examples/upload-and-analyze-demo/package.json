@@ -4,12 +4,18 @@
   "description": "Example code for setting up a webhook, catching events, uploading audio, and starting analysis.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node ./index.js server",
+    "upload": "node ./index.js upload"
   },
   "author": "Zachary Shute <zach@simpleemotion.com>",
   "license": "ISC",
   "dependencies": {
     "@simple-emotion/api-client": "^2.0.4",
+    "body-parser": "^1.18.3",
+    "buffer-equal-constant-time": "^1.0.1",
+    "express": "^4.16.4",
+    "request": "^2.88.0",
     "uuid": "^3.3.2"
   }
 }
