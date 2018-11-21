@@ -12,10 +12,10 @@ This module exports the webhook handler function and two CLI operations.
 docker run -it --rm -p <HOST_PORT>:80 \
        -v <HOST_OUTPUT_DIR>:/mnt/analyses \
        -v <HOST_CONFIGS_DIR>:/home/app/configs \
-       se-api-client-demo server <WEBHOOK_SERVER_URL>
+       gcr.io/simple-emotion/api-client/demo server <WEBHOOK_SERVER_URL>
 ```
 
-EX: `docker run -it --rm -p 80:80 -v analyses:/mnt/analyses -v configs:/home/app/configs se-api-client-demo server http://example.com/webhook`
+EX: `docker run -it --rm -p 80:80 -v analyses:/mnt/analyses -v configs:/home/app/configs gcr.io/simple-emotion/api-client/demo server http://example.com/webhook`
 
 ## Module Usage
 
