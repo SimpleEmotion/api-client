@@ -1,7 +1,7 @@
 {
   "name": "@simple-emotion/api-client",
   "description": "Simple Emotion APIs Client",
-  "version": "2.0.6",
+  "version": "2.0.7-0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/simpleemotion/api-client.git"
