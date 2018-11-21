@@ -5,7 +5,19 @@ listens for webhooks from Simple Emotion.
 
 This module exports the webhook handler function and two CLI operations.
 
-## Module Useage
+## Docker Usage
+
+## Server
+```
+docker run -it --rm -p <HOST_PORT>:80 \
+       -v <HOST_OUTPUT_DIR>:/mnt/analyses \
+       -v <HOST_CONFIGS_DIR>:/home/app/configs \
+       se-api-client-demo server <WEBHOOK_SERVER_URL>
+```
+
+EX: `docker run -it --rm -p 80:80 -v analyses:/mnt/analyses -v configs:/home/app/configs se-api-client-demo server http://example.com/webhook`
+
+## Module Usage
 
 If the `index.js` file is loaded as a module, the HTTP server's request handler function for handling incoming
 webhooks is exposed as `handler`.
@@ -14,16 +26,7 @@ webhooks is exposed as `handler`.
 const { handler } = require( './index.js' );
 ```
 
-## CLI Useage
-
-### Upload
-```
-npm run upload <AUDIO_FILE_URL>
-```
-
-Creates a new Simple Emotion audio object and starts an upload operation (`transload-audio`).
-
-EX: `npm run upload https://cdn.simpleemotion.com/audio/calls/steve-brown.wav`
+## CLI Usage
 
 ### Server
 ```
@@ -36,3 +39,12 @@ it will queue up an analyze audio operation (`classify-transcript`). If the serv
 `classify-transcript` it will download the analysis results to a local file.
 
 EX: `npm run server http://example.com/webhook`
+
+### Upload
+```
+npm run upload <AUDIO_FILE_URL>
+```
+
+Creates a new Simple Emotion audio object and starts an upload operation (`transload-audio`).
+
+EX: `npm run upload https://cdn.simpleemotion.com/audio/calls/steve-brown.wav`
