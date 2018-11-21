@@ -1,6 +1,6 @@
 'use strict';
 
-const Config = require( './config' );
+const Config = require( './configs/app' );
 const SEAPIClient = require( '@simple-emotion/api-client' );
 const { promisify: p } = require( 'util' );
 const fs = require( 'fs' );
