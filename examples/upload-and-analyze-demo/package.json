@@ -9,7 +9,8 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker-build": "docker build --compress --tag=se-api-client-demo --file=Dockerfile .",
+    "docker-run": "docker run -it --rm --network=host se-api-client-demo",
     "server": "node index.js server",
     "upload": "node index.js upload"
   },

@@ -15,6 +15,6 @@
   },
   "server": {
     "port": 80,
-    "storagePath": "./analysis"
+    "storagePath": "/mnt/analyses"
   }
 }
