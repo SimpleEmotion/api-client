@@ -96,16 +96,18 @@ async function server( callback_url ) {
 
 async function upload( url, tags ) {
 
+  const _url = new URL( url );
+
   // Add audio file
   const { audio } = await p( SEAPI.storage.v2.audio.add )(
     {
       audio: {
-        name: path.basename( url ),
+        name: _url.hostname + _url.pathname,
         owner: OWNER,
         metadata: {
           speakers: [
-            { _id: 'speakerCh0', role: 'agent' },
-            { _id: 'speakerCh1', role: 'customer' }
+            { _id: 'speaker-channel-0', role: 'agent' },
+            { _id: 'speaker-channel-1', role: 'customer' }
           ]
         }
       }
@@ -230,6 +232,14 @@ async function analyzeAudio( audio_id ) {
 
 async function downloadTranscript( operation ) {
 
+  const { audio } = await p( SEAPI.storage.v2.audio.get )(
+    {
+      audio: {
+        _id: operation.parameters.audio_id
+      }
+    }
+  );
+
   const { document } = await p( SEAPI.storage.v2.document.getLink )(
     {
       document: operation.result.document.transcript
@@ -241,11 +251,11 @@ async function downloadTranscript( operation ) {
   }
   else {
 
-    const filename = path.resolve( STORAGE_DIR, operation.parameters.audio_id ) + '.json';
+    const filename = path.resolve( STORAGE_DIR, audio.name ) + '.json';
 
     await downloadFile( document.link, filename );
 
-    console.log( `Classified-transcript downloaded (${filename}).` );
+    console.log( `Classified-transcript downloaded (${audio.name}.json).` );
 
   }
 
@@ -288,6 +298,10 @@ async function ensureWebhook( url ) {
 }
 
 async function downloadFile( url, filename ) {
+
+  // Ensure download directory exists
+  await mkdirp( path.resolve( path.dirname( filename ) ) );
+
   return new Promise( ( resolve, reject ) => {
 
     let returned = false;
@@ -321,6 +335,7 @@ async function downloadFile( url, filename ) {
       } );
 
   } );
+
 }
 
 function equal( a, b ) {
