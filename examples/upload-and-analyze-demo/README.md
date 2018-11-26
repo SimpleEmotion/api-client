@@ -26,6 +26,14 @@ docker run -it --rm \
        simpleemotion/api-client-demo:latest \
        server http://example.com/webhook
 ```
+Response:
+```
+[!] Ensuring webhook exists.
+[!] Starting server.
+[!] Server listening on port 80.
+Created classify-transcript operation (81265e4a-b9e7-453c-b896-e7b924d0dac4) for audio (3977ecbb-6571-4244-b63d-a7a38dc0975d).
+Classified-transcript downloaded (cdn.simpleemotion.com/audio/calls/steve-brown.wav.json).
+```
 
 ### Upload
 ```
