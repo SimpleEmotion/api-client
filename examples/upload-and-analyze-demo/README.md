@@ -17,7 +17,7 @@ docker run -it --rm \
        server <WEBHOOK_SERVER_URL>
 ```
 
-#### Example
+Example:
 ```
 docker run -it --rm \
        -p 80:80 \
@@ -35,12 +35,17 @@ docker run -it --rm \
        upload <AUDIO_FILE_URL>
 ```
 
-#### Example
+Example:
 ```
 docker run -it --rm \
        -v $(pwd)/config.json:/home/app/config.json \
        simpleemotion/api-client-demo:latest \
        upload https://cdn.simpleemotion.com/audio/calls/steve-brown.wav
+```
+
+Output:
+```
+{"audio":{"_id":"80137453-b808-40f5-9d58-72cc704176d2"},"operation":{"_id":"c481302e-b20c-4a98-be07-dfd286dd4e37"}}
 ```
 
 ## CLI
