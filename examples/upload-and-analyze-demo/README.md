@@ -8,22 +8,39 @@ This module exports the webhook handler function and two CLI operations.
 ## Docker
 
 ### Server
-#### Command
 ```
-docker run -it --rm -p <HOST_PORT>:80 \
+docker run -it --rm \
+       -p <HOST_PORT>:80 \
        -v <HOST_OUTPUT_DIR>:/mnt/analyses \
-       -v <HOST_CONFIGS_DIR>:/home/app/configs \
+       -v <HOST_CONFIG_FILE>:/home/app/config.json \
        simpleemotion/api-client-demo:latest \
        server <WEBHOOK_SERVER_URL>
 ```
 
 #### Example
 ```
-docker run -it --rm -p 80:80 \
-       -v analyses:/mnt/analyses \
-       -v configs:/home/app/configs \
+docker run -it --rm \
+       -p 80:80 \
+       -v $(pwd)/analyses:/mnt/analyses \
+       -v $(pwd)/config.json:/home/app/config.json \
        simpleemotion/api-client-demo:latest \
        server http://example.com/webhook
+```
+
+### Upload
+```
+docker run -it --rm \
+       -v <HOST_CONFIG_FILE>:/home/app/config.json \
+       simpleemotion/api-client-demo:latest \
+       upload <AUDIO_FILE_URL>
+```
+
+#### Example
+```
+docker run -it --rm \
+       -v $(pwd)/config.json:/home/app/config.json \
+       simpleemotion/api-client-demo:latest \
+       upload https://cdn.simpleemotion.com/audio/calls/steve-brown.wav
 ```
 
 ## CLI
