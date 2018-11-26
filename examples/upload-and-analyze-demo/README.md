@@ -13,7 +13,7 @@ This module exports the webhook handler function and two CLI operations.
 docker run -it --rm -p <HOST_PORT>:80 \
        -v <HOST_OUTPUT_DIR>:/mnt/analyses \
        -v <HOST_CONFIGS_DIR>:/home/app/configs \
-       simpleemotion/api-client-demo@latest \
+       simpleemotion/api-client-demo:latest \
        server <WEBHOOK_SERVER_URL>
 ```
 
@@ -22,7 +22,7 @@ docker run -it --rm -p <HOST_PORT>:80 \
 docker run -it --rm -p 80:80 \
        -v analyses:/mnt/analyses \
        -v configs:/home/app/configs \
-       simpleemotion/api-client-demo@latest \
+       simpleemotion/api-client-demo:latest \
        server http://example.com/webhook
 ```
 

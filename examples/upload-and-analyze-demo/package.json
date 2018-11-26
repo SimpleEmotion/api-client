@@ -9,8 +9,10 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "docker-build": "docker build --compress --tag=se-api-client-demo --file=Dockerfile .",
-    "docker-run": "docker run -it --rm --network=host se-api-client-demo",
+    "docker-build": "docker build --compress --tag=simpleemotion/api-client-demo:latest --file=Dockerfile .",
+    "docker-run-server": "docker run -it --rm -p 80:80 -v $(pwd)/analyses:/mnt/analyses -v $(pwd)/config.json:/home/app/config.json simpleemotion/api-client-demo:latest server",
+    "docker-run-upload": "docker run -it --rm -v $(pwd)/config.json:/home/app/config.json simpleemotion/api-client-demo:latest upload",
+    "start": "npm run server",
     "server": "node index.js server",
     "upload": "node index.js upload"
   },

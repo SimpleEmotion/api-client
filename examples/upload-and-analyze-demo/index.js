@@ -1,6 +1,6 @@
 'use strict';
 
-const Config = require( './configs/app' );
+const Config = require( './config' );
 const SEAPIClient = require( '@simple-emotion/api-client' );
 const { promisify: p } = require( 'util' );
 const fs = require( 'fs' );
@@ -39,7 +39,7 @@ if ( require.main === module ) {
   const url = process.argv[ 3 ];
 
   if ( !cmd || !url ) {
-    throw new Error( `Must specify ${cmd ? 'CLI operation type' : 'URL'}.` );
+    throw new Error( `Must specify ${cmd ? 'URL' : 'ACTION'}.` );
   }
 
   switch ( cmd ) {
@@ -307,20 +307,16 @@ async function downloadFile( url, filename ) {
       .on( 'error', done )
       .on( 'response', read => {
 
-        read.pause();
-
         if ( read.statusCode >= 300 ) {
-          return done( new Error( 'Unable to download file from url.' ) );
+          return done( new Error( `Unable to download file (${read.statusCode}) from url: ${url}` ) );
         }
 
         // Stream the contents to a local file
-        const write = fs.createWriteStream( filename );
+        const write = fs.createWriteStream( filename )
+                        .on( 'error', done )
+                        .on( 'finish', done );
 
-        write.on( 'error', done );
-        write.on( 'finish', done );
-
-        read.pipe( write );
-        read.resume();
+        read.on( 'error', done ).pipe( write );
 
       } );
 

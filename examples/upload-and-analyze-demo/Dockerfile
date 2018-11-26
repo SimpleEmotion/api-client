@@ -19,10 +19,8 @@ RUN npm install --production --unsafe-perm --quiet
 
 FROM base as runtime
 
-COPY configs /home/app/configs
-COPY index.js /home/app/
+COPY index.js package.json /home/app/
 COPY --from=builder /home/app/node_modules /home/app/node_modules
-COPY package.json /home/app/
 
 ENTRYPOINT [ "npm", "--loglevel=silent", "run" ]
 
