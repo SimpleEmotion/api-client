@@ -59,7 +59,7 @@ if ( require.main === module ) {
       } );
       break;
     default:
-      throw new Error( 'Unsupported CLI operation type. Refer to README for useage examples.' );
+      throw new Error( 'Unsupported CLI operation type. Refer to README for usage examples.' );
   }
 
 }
@@ -94,15 +94,23 @@ async function server( callback_url ) {
 
 }
 
-async function upload( url, tags ) {
+async function upload( uri, tags ) {
 
-  const _url = new URL( url );
+  let file;
+  let name = path.basename( uri );
+
+  try {
+    const _url = new URL( uri );
+    name = _url.hostname + _url.pathname;
+  } catch ( err ) {
+    file = true;
+  }
 
   // Add audio file
   const { audio } = await p( SEAPI.storage.v2.audio.add )(
     {
       audio: {
-        name: _url.hostname + _url.pathname,
+        name,
         owner: OWNER,
         metadata: {
           speakers: [
@@ -114,22 +122,92 @@ async function upload( url, tags ) {
     }
   );
 
-  // Upload raw audio data
-  const { operation } = await p( SEAPI.storage.v2.audio.uploadFromUrl )(
+  let operation;
+
+  if ( file ) {
+    await uploadFromFile( uri, audio, tags );
+    operation = await analyzeAudio( audio._id, tags ).then( r => r.operation );
+  } else {
+    operation = await uploadFromUrl( uri, audio, tags ).then( r => r.operation );
+  }
+
+  return {
+    audio: {
+      _id: audio._id,
+      name: audio.name
+    },
+    operation: {
+      _id: operation._id,
+      type: operation.type
+    }
+  };
+
+}
+
+async function uploadFromFile( filename, audio ) {
+
+  // Get upload url
+  const { url } = await p( SEAPI.storage.v2.audio.getUploadUrl )(
     {
       audio: {
-        _id: audio._id,
-        owner: OWNER
-      },
-      url,
-      operation: {
-        tags: [ `audio_id=${audio._id}`, ... ( tags || [] ) ]
+        _id: audio._id
       }
     }
   );
 
-  return { audio: { _id: audio._id }, operation: { _id: operation._id } };
+  const file = fs.createReadStream( filename );
 
+  return new Promise( ( resolve, reject ) => {
+
+    const upload = request(
+      {
+        method: 'PUT',
+        url,
+        headers: {
+          'Content-Type': ''
+        }
+      },
+      ( err, response, body ) => {
+
+        if ( err ) {
+          return reject( err );
+        }
+
+        if ( response.statusCode >= 300 ) {
+          return reject(
+            Object.assign(
+              new Error( 'Request failed.' ),
+              { response, body }
+            )
+          );
+        }
+
+        resolve();
+
+      }
+    );
+
+    file.pipe( upload );
+
+  } );
+
+}
+
+async function uploadFromUrl( url, audio, tags ) {
+  return p( SEAPI.storage.v2.audio.uploadFromUrl )(
+    {
+      audio: {
+        _id: audio._id
+      },
+      url,
+      operation: {
+        tags: [
+          `audio_id=${audio._id}`,
+          ...( tags || [] )
+        ]
+      }
+    }
+  );
 }
 
 async function handler( req, res ) {
@@ -173,22 +251,18 @@ async function handler( req, res ) {
     }
 
     if ( operation.type === 'transload-audio' ) {
-      await analyzeAudio( audio_id );
-    }
-
-    else if ( operation.type === 'classify-transcript' ) {
+      const { operation } = await analyzeAudio( audio_id );
+      console.log( `Created classify-transcript operation (${operation._id}) for audio (${audio_id}).` );
+    } else if ( operation.type === 'classify-transcript' ) {
       await downloadTranscript( operation );
-    }
-
-    else {
+    } else {
       console.warn( `Received unhandleable operation type: ${operation.type}` );
     }
 
     res.statusCode = 200;
     res.end();
 
-  }
-  catch ( err ) {
+  } catch ( err ) {
 
     if ( !err.code ) {
       err = {
@@ -204,13 +278,11 @@ async function handler( req, res ) {
   }
 }
 
-async function analyzeAudio( audio_id ) {
-
-  const { operation } = await p( SEAPI.callcenter.v2.transcript.classify )(
+async function analyzeAudio( audio_id, tags ) {
+  return p( SEAPI.callcenter.v2.transcript.classify )(
     {
       audio: {
-        _id: audio_id,
-        owner: OWNER
+        _id: audio_id
       },
       operation: {
         config: {
@@ -220,14 +292,12 @@ async function analyzeAudio( audio_id ) {
           }
         },
         tags: [
-          'audio._id=' + audio_id
+          'audio._id=' + audio_id,
+          ...( tags || [] )
         ]
       }
     }
   );
-
-  console.log( `Created classify-transcript operation (${operation._id}) for audio (${audio_id}).` );
-
 }
 
 async function downloadTranscript( operation ) {
@@ -248,8 +318,7 @@ async function downloadTranscript( operation ) {
 
   if ( process.env.GCP_PROJECT ) {
     console.log( 'Classified-transcript download link:', document.link );
-  }
-  else {
+  } else {
 
     const filename = path.resolve( STORAGE_DIR, audio.name ) + '.json';
 

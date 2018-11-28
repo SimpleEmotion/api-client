@@ -1,7 +1,7 @@
 {
   "name": "upload-and-analyze-demo",
   "description": "Example code for setting up a webhook, catching events, uploading audio, and starting analysis.",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "Zachary Shute <zach@simpleemotion.com>",
   "contributors": [
     "Akash Krishnan <ak@aakay.net>"
