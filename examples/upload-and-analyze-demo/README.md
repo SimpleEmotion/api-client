@@ -14,7 +14,7 @@ docker run -it --rm \
        -v <HOST_OUTPUT_DIR>:/mnt/analyses \
        -v <HOST_CONFIG_FILE>:/home/app/config.json \
        simpleemotion/api-client-demo:latest \
-       server <WEBHOOK_SERVER_URL>
+       --serve <PUBLIC_CALLBACK_URL>
 ```
 
 Example:
@@ -24,7 +24,7 @@ docker run -it --rm \
        -v $(pwd)/analyses:/mnt/analyses \
        -v $(pwd)/config.json:/home/app/config.json \
        simpleemotion/api-client-demo:latest \
-       server http://example.com/webhook
+       --serve=http://example.com/webhook
 ```
 Response:
 ```
@@ -40,7 +40,10 @@ Classified-transcript downloaded (cdn.simpleemotion.com/audio/calls/steve-brown.
 docker run -it --rm \
        -v <HOST_CONFIG_FILE>:/home/app/config.json \
        simpleemotion/api-client-demo:latest \
-       upload <AUDIO_FILE_URL>
+       --upload <SOURCE_AUDIO_FILE> \
+       [--name <AUDIO_NAME>] \
+       [--replace] \
+       [--reanalyze]
 ```
 
 Example:
@@ -48,7 +51,14 @@ Example:
 docker run -it --rm \
        -v $(pwd)/config.json:/home/app/config.json \
        simpleemotion/api-client-demo:latest \
-       upload https://cdn.simpleemotion.com/audio/calls/steve-brown.wav
+       --upload=https://cdn.simpleemotion.com/audio/calls/steve-brown.wav
+       
+docker run -it --rm \
+      -v $(pwd)/config.json:/home/app/config.json \
+      simpleemotion/api-client-demo:latest \
+      --upload=/path/to/a/file \
+      --name="example.wav" \
+      --replace
 ```
 
 Output:
@@ -60,7 +70,7 @@ Output:
 
 ### Server
 ```
-npm run server <WEBHOOK_SERVER_URL>
+node index.js --serve <WEBHOOK_SERVER_URL>
 ```
 
 Starts a basic HTTP server that creates a webhook for your organization and listens for
@@ -68,16 +78,16 @@ incoming operation complete events. If the server catches an upload complete eve
 it will queue up an analyze audio operation (`classify-transcript`). If the server catches a
 `classify-transcript` it will download the analysis results to a local file.
 
-EX: `npm run server http://example.com/webhook`
+EX: `node index.js --serve=http://example.com/webhook`
 
 ### Upload
 ```
-npm run upload <AUDIO_FILE_URL>
+node index.js --upload <AUDIO_FILE_URL>
 ```
 
 Creates a new Simple Emotion audio object and starts an upload operation (`transload-audio`).
 
-EX: `npm run upload https://cdn.simpleemotion.com/audio/calls/steve-brown.wav`
+EX: `node index.js --upload=https://cdn.simpleemotion.com/audio/calls/steve-brown.wav [--name <AUDIO_NAME>] [--replace] [--reanalyze]`
 
 
 ## Node Module

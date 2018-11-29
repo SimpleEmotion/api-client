@@ -1,4 +1,4 @@
-FROM node:10.13.0-alpine as base
+FROM node:10.14.0-alpine as base
 
 # Create working dir
 RUN mkdir -p /home/app

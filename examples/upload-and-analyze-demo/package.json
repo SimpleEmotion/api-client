@@ -1,7 +1,7 @@
 {
   "name": "upload-and-analyze-demo",
   "description": "Example code for setting up a webhook, catching events, uploading audio, and starting analysis.",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "author": "Zachary Shute <zach@simpleemotion.com>",
   "contributors": [
     "Akash Krishnan <ak@aakay.net>"
@@ -11,18 +11,16 @@
   "scripts": {
     "docker-build": "docker build --compress --tag=simpleemotion/api-client-demo:latest --file=Dockerfile .",
     "docker-run-server": "docker run -it --rm -p 80:80 -v $(pwd)/analyses:/mnt/analyses -v $(pwd)/config.json:/home/app/config.json simpleemotion/api-client-demo:latest server",
-    "docker-run-upload": "docker run -it --rm -v $(pwd)/config.json:/home/app/config.json simpleemotion/api-client-demo:latest upload",
-    "start": "npm run server",
-    "server": "node index.js server",
-    "upload": "node index.js upload"
+    "docker-run-upload": "docker run -it --rm -v $(pwd)/config.json:/home/app/config.json simpleemotion/api-client-demo:latest upload"
   },
   "engines": {
-    "node": "^10.13.0"
+    "node": "^10.14.0"
   },
   "dependencies": {
     "@simple-emotion/api-client": "^2.0.5",
     "body-parser": "^1.18.3",
     "buffer-equal-constant-time": "^1.0.1",
+    "commander": "^2.19.0",
     "express": "^4.16.4",
     "mkdirp": "^0.5.1",
     "request": "^2.88.0"

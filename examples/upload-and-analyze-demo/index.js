@@ -1,11 +1,13 @@
 'use strict';
 
+const pkg = require( './package' );
 const Config = require( './config' );
 const SEAPIClient = require( '@simple-emotion/api-client' );
 const { promisify: p } = require( 'util' );
 const fs = require( 'fs' );
 const path = require( 'path' );
 const crypto = require( 'crypto' );
+const cli = require( 'commander' );
 const mkdirp = p( require( 'mkdirp' ) );
 const express = require( 'express' );
 const request = require( 'request' );
@@ -26,40 +28,51 @@ const SEAPI = SEAPIClient(
       'callcenter',
       'operation',
       'storage',
-      'webhook'
-    ]
-  }
+      'webhook',
+    ],
+  },
 );
 
 module.exports.handler = handler;
 
 if ( require.main === module ) {
 
-  const cmd = process.argv[ 2 ];
-  const url = process.argv[ 3 ];
+  cli
+    .version( pkg.version, '-v, --version' )
+    .option( '--serve <url>', 'run webhook callback server' )
+    .option( '--upload <src>', 'upload audio file from url or path for analysis' )
+    .option( '-n, --name <name>', 'custom name for audio file' )
+    .option(
+      '--reanalyze',
+      'reanalyze existing audio file of the same name without uploading the specified file',
+    )
+    .option(
+      '--replace',
+      'reanalyze existing audio file of the same name by uploading and replacing with the specified file',
+    )
+    .parse( process.argv );
 
-  if ( !cmd || !url ) {
-    throw new Error( `Must specify ${cmd ? 'URL' : 'ACTION'}.` );
+  if ( cli.serve ) {
+    server( cli.serve ).then(
+      () => 0,
+      err => {
+        console.error( err );
+        process.exit( 1 );
+      },
+    );
   }
 
-  switch ( cmd ) {
-    case 'server':
-      server( url ).then().catch( err => {
-        console.error( err );
-        process.exit( 1 );
-      } );
-      break;
-    case 'upload':
-      upload( url ).then( result => {
+  if ( cli.upload ) {
+    upload( cli.upload, cli.name ).then(
+      result => {
         console.log( JSON.stringify( result ) );
         process.exit( 0 );
-      } ).catch( err => {
+      },
+      err => {
         console.error( err );
         process.exit( 1 );
-      } );
-      break;
-    default:
-      throw new Error( 'Unsupported CLI operation type. Refer to README for usage examples.' );
+      },
+    );
   }
 
 }
@@ -94,54 +107,102 @@ async function server( callback_url ) {
 
 }
 
-async function upload( uri, tags ) {
+async function upload( src, name, tags ) {
 
   let file;
-  let name = path.basename( uri );
 
   try {
-    const _url = new URL( uri );
-    name = _url.hostname + _url.pathname;
-  } catch ( err ) {
+    const _url = new URL( src );
+    name = name || ( _url.hostname + _url.pathname );
+  }
+  catch ( err ) {
     file = true;
+    name = name || path.basename( src );
   }
 
-  // Add audio file
-  const { audio } = await p( SEAPI.storage.v2.audio.add )(
-    {
-      audio: {
-        name,
-        owner: OWNER,
-        metadata: {
-          speakers: [
-            { _id: 'speaker-channel-0', role: 'agent' },
-            { _id: 'speaker-channel-1', role: 'customer' }
-          ]
-        }
-      }
-    }
-  );
+  const { audio } = await createAudio( name );
 
   let operation;
 
   if ( file ) {
-    await uploadFromFile( uri, audio, tags );
+    await uploadFromFile( src, audio, tags );
     operation = await analyzeAudio( audio._id, tags ).then( r => r.operation );
-  } else {
-    operation = await uploadFromUrl( uri, audio, tags ).then( r => r.operation );
+  }
+  else {
+    operation = await uploadFromUrl( src, audio, tags ).then( r => r.operation );
   }
 
   return {
     audio: {
       _id: audio._id,
-      name: audio.name
+      name: audio.name,
     },
     operation: {
       _id: operation._id,
-      type: operation.type
-    }
+      type: operation.type,
+    },
   };
 
+}
+
+async function createAudio( name ) {
+  return p( SEAPI.storage.v2.audio.get )(
+    {
+      audio: {
+        name,
+        owner: OWNER,
+      },
+    },
+  ).catch( err => {
+
+    // Ignore 404 error
+    if ( err.code !== 404 ) {
+      throw err;
+    }
+
+  } ).then( async result => {
+
+    // Remove audio if we need to replace
+    if ( result ) {
+
+      if ( !cli.replace ) {
+        return result;
+      }
+
+      await p( SEAPI.storage.v2.audio.remove )(
+        {
+          audio: {
+            name,
+            owner: OWNER,
+          },
+        },
+      ).catch( err => {
+
+        // Ignore 404 error
+        if ( err.code !== 404 ) {
+          throw err;
+        }
+
+      } );
+
+    }
+
+    return p( SEAPI.storage.v2.audio.add )(
+      {
+        audio: {
+          name,
+          owner: OWNER,
+          metadata: {
+            speakers: [
+              { _id: 'speaker-channel-0', role: 'agent' },
+              { _id: 'speaker-channel-1', role: 'customer' },
+            ],
+          },
+        },
+      },
+    );
+
+  } );
 }
 
 async function uploadFromFile( filename, audio ) {
@@ -150,10 +211,22 @@ async function uploadFromFile( filename, audio ) {
   const { url } = await p( SEAPI.storage.v2.audio.getUploadUrl )(
     {
       audio: {
-        _id: audio._id
-      }
+        _id: audio._id,
+      },
+    },
+  ).catch( err => {
+
+    if ( err.code === 409 && cli.reanalyze ) {
+      return {};
     }
-  );
+
+    throw err;
+
+  } );
+
+  if ( !url ) {
+    return;
+  }
 
   const file = fs.createReadStream( filename );
 
@@ -164,8 +237,8 @@ async function uploadFromFile( filename, audio ) {
         method: 'PUT',
         url,
         headers: {
-          'Content-Type': ''
-        }
+          'Content-Type': '',
+        },
       },
       ( err, response, body ) => {
 
@@ -177,14 +250,14 @@ async function uploadFromFile( filename, audio ) {
           return reject(
             Object.assign(
               new Error( 'Request failed.' ),
-              { response, body }
-            )
+              { response, body },
+            ),
           );
         }
 
         resolve();
 
-      }
+      },
     );
 
     file.pipe( upload );
@@ -197,16 +270,16 @@ async function uploadFromUrl( url, audio, tags ) {
   return p( SEAPI.storage.v2.audio.uploadFromUrl )(
     {
       audio: {
-        _id: audio._id
+        _id: audio._id,
       },
       url,
       operation: {
         tags: [
           `audio_id=${audio._id}`,
-          ...( tags || [] )
-        ]
-      }
-    }
+          ...( tags || [] ),
+        ],
+      },
+    },
   );
 }
 
@@ -253,21 +326,24 @@ async function handler( req, res ) {
     if ( operation.type === 'transload-audio' ) {
       const { operation } = await analyzeAudio( audio_id );
       console.log( `Created classify-transcript operation (${operation._id}) for audio (${audio_id}).` );
-    } else if ( operation.type === 'classify-transcript' ) {
+    }
+    else if ( operation.type === 'classify-transcript' ) {
       await downloadTranscript( operation );
-    } else {
+    }
+    else {
       console.warn( `Received unhandleable operation type: ${operation.type}` );
     }
 
     res.statusCode = 200;
     res.end();
 
-  } catch ( err ) {
+  }
+  catch ( err ) {
 
     if ( !err.code ) {
       err = {
         code: 500,
-        err: err.message
+        err: err.message,
       };
     }
 
@@ -282,21 +358,21 @@ async function analyzeAudio( audio_id, tags ) {
   return p( SEAPI.callcenter.v2.transcript.classify )(
     {
       audio: {
-        _id: audio_id
+        _id: audio_id,
       },
       operation: {
         config: {
           'transcribe-audio': {
             redact: false,        // Set to true to scrub any numbers that may contain personal data
-            languageCode: 'en-US' // Change the transcription language with this
-          }
+            languageCode: 'en-US', // Change the transcription language with this
+          },
         },
         tags: [
           'audio._id=' + audio_id,
-          ...( tags || [] )
-        ]
-      }
-    }
+          ...( tags || [] ),
+        ],
+      },
+    },
   );
 }
 
@@ -305,20 +381,21 @@ async function downloadTranscript( operation ) {
   const { audio } = await p( SEAPI.storage.v2.audio.get )(
     {
       audio: {
-        _id: operation.parameters.audio_id
-      }
-    }
+        _id: operation.parameters.audio_id,
+      },
+    },
   );
 
   const { document } = await p( SEAPI.storage.v2.document.getLink )(
     {
-      document: operation.result.document.transcript
-    }
+      document: operation.result.document.transcript,
+    },
   );
 
   if ( process.env.GCP_PROJECT ) {
     console.log( 'Classified-transcript download link:', document.link );
-  } else {
+  }
+  else {
 
     const filename = path.resolve( STORAGE_DIR, audio.name ) + '.json';
 
@@ -337,13 +414,13 @@ async function ensureWebhook( url ) {
       webhook: {
         owner: OWNER,
         event: {
-          type: 'operation.complete'
+          type: 'operation.complete',
         },
         states: {
-          enabled: true
-        }
-      }
-    }
+          enabled: true,
+        },
+      },
+    },
   ).then( result => result.webhooks.find( w => w.url === url ) );
 
   if ( webhook ) {
@@ -356,12 +433,12 @@ async function ensureWebhook( url ) {
       webhook: {
         owner: OWNER,
         event: {
-          type: 'operation.complete'
+          type: 'operation.complete',
         },
         url: url,
-        secret: CALLBACK_SECRET
-      }
-    }
+        secret: CALLBACK_SECRET,
+      },
+    },
   ).then( result => result.webhook );
 
 }
