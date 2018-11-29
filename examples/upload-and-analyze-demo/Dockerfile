@@ -22,6 +22,6 @@ FROM base as runtime
 COPY index.js package.json /home/app/
 COPY --from=builder /home/app/node_modules /home/app/node_modules
 
-ENTRYPOINT [ "npm", "--loglevel=silent", "run" ]
+ENTRYPOINT [ "node", "index.js" ]
 
 EXPOSE 80
