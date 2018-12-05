@@ -14,7 +14,7 @@
     "docker-run-upload": "docker run -it --rm -v $(pwd)/config.json:/home/app/config.json simpleemotion/api-client-demo:latest --upload"
   },
   "engines": {
-    "node": "^10.14.0"
+    "node": "^11.3.0"
   },
   "dependencies": {
     "@simple-emotion/api-client": "^2.0.5",
