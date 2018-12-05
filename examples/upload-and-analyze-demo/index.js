@@ -42,6 +42,7 @@ if ( require.main === module ) {
     .option( '--serve <url>', 'run webhook callback server' )
     .option( '--port <port>', 'host port for server to listen on' )
     .option( '--upload <src>', 'upload audio file from url or path for analysis' )
+    .option( '--download <type>', 'download specified type of document for audio associated with specified name' )
     .option( '-n, --name <name>', 'custom name for audio file', '' )
     .option(
       '--reanalyze',
@@ -69,6 +70,16 @@ if ( require.main === module ) {
         console.log( JSON.stringify( result ) );
         process.exit( 0 );
       },
+      err => {
+        console.error( err );
+        process.exit( 1 );
+      },
+    );
+  }
+
+  if ( cli.download ) {
+    download( cli.download, cli.name ).then(
+      () => 0,
       err => {
         console.error( err );
         process.exit( 1 );
@@ -145,6 +156,24 @@ async function upload( src, name, tags ) {
       type: operation.type,
     },
   };
+
+}
+
+async function download( type, name ) {
+
+  const { audio } = await createAudio( name );
+
+  await downloadDocument(
+    {
+      type,
+      entity: {
+        _id: audio._id,
+        type: 'type.simpleapis.com/storage.audio'
+      },
+      owner: OWNER
+    },
+    audio
+  );
 
 }
 
@@ -389,7 +418,11 @@ async function analyzeAudio( audio_id, tags ) {
 
 async function downloadDocument( document, audio ) {
 
-  document = await p( SEAPI.storage.v2.document.get )( { document } ).then( r => r.document );
+  document = await p( SEAPI.storage.v2.document.list )( { document, limit: 1 } ).then( r => r.documents[ 0 ] );
+
+  if ( !document ) {
+    throw new Error( 'Document not found.' );
+  }
 
   const link = await p( SEAPI.storage.v2.document.getLink )(
     {
