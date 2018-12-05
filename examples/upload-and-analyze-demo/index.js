@@ -40,8 +40,9 @@ if ( require.main === module ) {
   cli
     .version( pkg.version, '-v, --version' )
     .option( '--serve <url>', 'run webhook callback server' )
+    .option( '--port <port>', 'host port for server to listen on' )
     .option( '--upload <src>', 'upload audio file from url or path for analysis' )
-    .option( '-n, --name <name>', 'custom name for audio file' )
+    .option( '-n, --name <name>', 'custom name for audio file', '' )
     .option(
       '--reanalyze',
       'reanalyze existing audio file of the same name without uploading the specified file',
@@ -53,7 +54,7 @@ if ( require.main === module ) {
     .parse( process.argv );
 
   if ( cli.serve ) {
-    server( cli.serve ).then(
+    server( cli.serve, Number.parseInt( cli.port, 10 ) ).then(
       () => 0,
       err => {
         console.error( err );
@@ -77,7 +78,9 @@ if ( require.main === module ) {
 
 }
 
-async function server( callback_url ) {
+async function server( callback_url, port ) {
+
+  port = port || Config.server.port || 80;
 
   // Ensure that a webhook exists for the specified URI
   console.log( '[!] Ensuring webhook exists.' );
@@ -102,8 +105,8 @@ async function server( callback_url ) {
   // Handle webhook post request path
   app.post( path, handler );
 
-  server.listen( Config.server.port );
-  console.log( `[!] Server listening on port ${Config.server.port}.` );
+  server.listen( port );
+  console.log( `[!] Server listening on port ${port}.` );
 
 }
 
@@ -314,21 +317,29 @@ async function handler( req, res ) {
     }
 
     const { operation } = req.body.data;
-    const audio_id = operation.parameters.audio_id;
+
+    const { audio } = await p( SEAPI.storage.v2.audio.get )(
+      {
+        audio: {
+          _id: operation.parameters.audio_id,
+        },
+      },
+    );
 
     if ( operation.error && operation.error.code !== 409 ) {
-      console.error( `[!] Operation (${operation._id}) for audio (${audio_id}) failed!` );
+      console.error( `[!] Operation (${operation._id}) for audio (${audio.name}) failed!` );
       console.error( '[!]', JSON.stringify( operation.error, null, 2 ) );
       res.statusCode = 200;
       return res.end();
     }
 
     if ( operation.type === 'transload-audio' ) {
-      const { operation } = await analyzeAudio( audio_id );
-      console.log( `Created classify-transcript operation (${operation._id}) for audio (${audio_id}).` );
+      const { operation } = await analyzeAudio( audio._id );
+      console.log( `Created classify-transcript operation (${operation._id}) for audio (${audio.name}).` );
     }
     else if ( operation.type === 'classify-transcript' ) {
-      await downloadTranscript( operation );
+      await downloadDocument( operation.result.document.classifications, audio );
+      await downloadDocument( operation.result.document.transcript, audio );
     }
     else {
       console.warn( `Received unhandleable operation type: ${operation.type}` );
@@ -376,34 +387,27 @@ async function analyzeAudio( audio_id, tags ) {
   );
 }
 
-async function downloadTranscript( operation ) {
+async function downloadDocument( document, audio ) {
 
-  const { audio } = await p( SEAPI.storage.v2.audio.get )(
+  document = await p( SEAPI.storage.v2.document.get )( { document } ).then( r => r.document );
+
+  const link = await p( SEAPI.storage.v2.document.getLink )(
     {
-      audio: {
-        _id: operation.parameters.audio_id,
+      document: {
+        _id: document._id
       },
     },
-  );
-
-  const { document } = await p( SEAPI.storage.v2.document.getLink )(
-    {
-      document: operation.result.document.transcript,
-    },
-  );
+  ).then( r => r.document.link );
 
   if ( process.env.GCP_PROJECT ) {
-    console.log( 'Classified-transcript download link:', document.link );
+    return console.log( `${document.type} download link: ${link}` );
   }
-  else {
 
-    const filename = path.resolve( STORAGE_DIR, audio.name ) + '.json';
+  const filename = path.resolve( STORAGE_DIR, audio.name, document.type + '.json' );
 
-    await downloadFile( document.link, filename );
+  await downloadFile( link, filename );
 
-    console.log( `Classified-transcript downloaded (${audio.name}.json).` );
-
-  }
+  console.log( `${document.type} downloaded: ${filename}` );
 
 }
 
